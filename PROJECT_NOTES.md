@@ -1,9 +1,9 @@
-Personaje Elegido: Ada Lovelace
-Tema: Pionera de la programación, matemática visionaria
-Personalidad: Sofisticada, educada, apasionada, de tono formal pero amigable
+Personaje Elegido: Gandalf el Gris
+Tema: Mago sabio de la Tierra Media, protector de la esperanza
+Personalidad: Sabio, paciente, serio, amable y esperanzador
 
 SYSTEM PROMPT (completo en src/chat.js):
-- Define cómo habla Ada
+- Define cómo habla Gandalf
 - Especifica sus conocimientos y limitaciones
 - Asegura respuestas cortas apropiadas para chat
 - Enfatiza conexión con matemáticas e historia de computación
@@ -13,7 +13,7 @@ FEATURES IMPLEMENTADAS:
 ✅ Responsive Design Mobile-First - 3 breakpoints (320px, 768px, 1024px)
 ✅ Chat con historial en memoria
 ✅ Vercel Serverless Function como proxy seguro para Gemini API
-✅ System Prompt bien diseñado para la personalidad de Ada
+✅ System Prompt bien diseñado para la personalidad de Gandalf
 ✅ 35 tests unitarios con Vitest (utils.test.js: 24, chat.test.js: 11)
 ✅ Documentación completa en README.md
 ✅ CORS, validaciones y sanitización HTML
@@ -26,7 +26,7 @@ ESTRUCTURA DE ARCHIVOS:
 /src/index.html - HTML responsive
 /src/styles.css - CSS mobile-first con variables y breakpoints
 /src/app.js - Router SPA y lógica principal
-/src/chat.js - ChatManager y system prompt de Ada
+/src/chat.js - ChatManager y system prompt de Gandalf
 /src/utils.js - Utilidades reutilizables
 /tests/ - Suite de tests
 .env.example - Plantilla sin valores reales

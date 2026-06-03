@@ -1,7 +1,7 @@
 {
-  "name": "ada-ai-chat",
+  "name": "gandalf-ai-chat",
   "version": "1.0.0",
-  "description": "Single Page Application - Chat with Ada Lovelace, powered by Google Gemini AI",
+  "description": "Single Page Application - Chat with Gandalf el Gris, powered by Google Gemini AI",
   "main": "src/index.html",
   "scripts": {
     "dev": "vite",
@@ -16,7 +16,7 @@
     "chat",
     "ai",
     "gemini",
-    "ada-lovelace"
+    "gandalf"
   ],
   "author": "Your Name",
   "license": "MIT",

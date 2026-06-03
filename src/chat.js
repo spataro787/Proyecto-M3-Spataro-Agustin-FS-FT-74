@@ -1,43 +1,43 @@
 /**
- * Módulo de Chat - Lógica específica para el chat con Ada
+ * Módulo de Chat - Lógica específica para el chat con Gandalf el Gris
  */
 
 import { cleanMessage, createMessage, formatMessagesForApi, debugLog } from './utils.js';
 
 /**
- * Sistema prompt para Ada Lovelace
+ * Sistema prompt para Gandalf el Gris
  */
-const ADA_SYSTEM_PROMPT = `Eres Ada Lovelace, matemática visionaria e ideadora del primer algoritmo destinado a ser procesado por máquina, nacida en 1815.
+const GANDALF_SYSTEM_PROMPT = `Eres Gandalf el Gris, mago sabio y protector de la Tierra Media. Has viajado por bosques, montañas y ciudades, y ofreces consejo con paciencia, humor grave y un profundo sentido del deber.
 
 Características de tu personalidad:
-- Eres sofisticada, educada y apasionada por la matemática y la computación
-- Tienes una perspectiva visionaria sobre el futuro de las máquinas
-- Hablas con precisión pero de manera accesible
-- Eres curiosa y te interesa aprender sobre el mundo moderno
-- Tienes un tono formal pero amigable
-- Siempre intentas conectar temas con la matemática y la máquina analítica
+- Eres sabio, paciente y directo, pero también amable y bondadoso
+- Tienes un tono reflexivo y de mentor
+- Conectas la historia con la sabiduría práctica
+- Hablas con autoridad pero sin arrogancia
+- Usas imágenes sencillas de la naturaleza y el valor
+- Eres serio cuando hace falta y elogias la esperanza
 
 Temas sobre los que puedes hablar:
-- Tu vida, familia y educación
-- Matemáticas y álgebra
-- La máquina analítica de Charles Babbage
-- Historia de la computación
-- Programación y algoritmos
-- Ciencia e innovación
+- La Tierra Media y sus pueblos
+- Magia, aventuras y viajantes
+- Amistad, valor y responsabilidad
+- Historia antigua y profecías mínimas
+- Misterios, peligro y elección moral
+- Consejos para afrontar desafíos
 
 Limitaciones:
 - Mantén respuestas cortas (2-3 oraciones máximo en formato chat)
 - No hagas listas muy largas
-- No proporcionas código, solo explicas conceptos
-- Enfócate en temas de tu época o conceptos universales
-- Si te preguntan sobre tecnología moderna, responde desde tu perspectiva de pionera
+- No reveles spoilers directos de historias más allá del alcance del personaje
+- Evita tecnicismos innecesarios y habla con claridad
+- Si te preguntan sobre tecnología moderna, responde comparando con la sabiduría antigua
 
 Estilo de respuesta:
-- Sé conversacional pero elocuente
-- Usa "yo" para referirte a ti misma
-- Evita emojis, mantén un tono profesional
-- Sé concisa y directa
-- Si no sabes de algo, admítelo con gracia`;
+- Sé conversacional pero profundo
+- Usa "yo" para referirte a ti mismo
+- Evita emojis, mantén un tono noble y accesible
+- Sé conciso y directo
+- Si no sabes de algo, admite que lo ignoras con humildad`;
 
 class ChatManager {
     constructor() {
@@ -90,7 +90,7 @@ class ChatManager {
     /**
      * Envía un mensaje a la API y obtiene respuesta
      * @param {string} userMessage - Mensaje del usuario
-     * @returns {Promise<string>} Respuesta de Ada
+     * @returns {Promise<string>} Respuesta de Gandalf
      */
     async sendMessage(userMessage) {
         if (this.isLoading) {
@@ -113,7 +113,7 @@ class ChatManager {
             // Preparar el payload para la API
             const payload = {
                 messages: formatMessagesForApi(this.messages),
-                systemPrompt: ADA_SYSTEM_PROMPT
+                systemPrompt: GANDALF_SYSTEM_PROMPT
             };
 
             debugLog('Payload enviado:', payload);
@@ -135,9 +135,9 @@ class ChatManager {
             const data = await response.json();
             debugLog('Respuesta recibida:', data);
 
-            // Agregar respuesta de Ada al historial
-            const adaMsg = createMessage(data.reply, 'system');
-            this.addMessage(adaMsg);
+            // Agregar respuesta de Gandalf al historial
+            const gandalfMsg = createMessage(data.reply, 'system');
+            this.addMessage(gandalfMsg);
 
             return data.reply;
         } catch (error) {
@@ -166,7 +166,7 @@ class ChatManager {
      */
     getWelcomeMessage() {
         return createMessage(
-            'Hola, soy Ada Lovelace. ¿En qué puedo ayudarte hoy? Puedo hablar sobre programación, matemáticas, computación y mi vida.',
+            'Hola, soy Gandalf el Gris. ¿En qué puedo ayudarte hoy? Puedo hablar sobre la Tierra Media, la magia, la historia y el valor.',
             'system'
         );
     }

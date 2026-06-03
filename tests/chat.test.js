@@ -23,7 +23,7 @@ describe('ChatManager', () => {
             chatManager.initializeChat();
             const message = {
                 id: 'test-1',
-                text: 'Hola Ada',
+                text: 'Hola Gandalf',
                 sender: 'user',
                 timestamp: Date.now(),
                 time: '12:30'

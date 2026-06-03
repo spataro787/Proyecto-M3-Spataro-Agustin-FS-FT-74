@@ -70,8 +70,8 @@ describe('Funciones de Utilidad', () => {
 
     describe('createMessage', () => {
         it('debería crear un mensaje de usuario válido', () => {
-            const message = createMessage('Hola Ada', 'user');
-            expect(message.text).toBe('Hola Ada');
+            const message = createMessage('Hola Gandalf', 'user');
+            expect(message.text).toBe('Hola Gandalf');
             expect(message.sender).toBe('user');
             expect(message.id).toBeDefined();
             expect(message.timestamp).toBeDefined();
@@ -79,7 +79,7 @@ describe('Funciones de Utilidad', () => {
         });
 
         it('debería crear un mensaje del sistema válido', () => {
-            const message = createMessage('Respuesta de Ada', 'system');
+            const message = createMessage('Respuesta de Gandalf', 'system');
             expect(message.sender).toBe('system');
         });
 

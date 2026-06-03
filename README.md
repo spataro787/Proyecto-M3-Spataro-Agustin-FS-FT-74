@@ -1,12 +1,12 @@
-# Ada Lovelace AI Chat - Single Page Application
+# Gandalf el Gris AI Chat - Single Page Application
 
-Una Single Page Application interactiva que permite conversar con una versión de IA de **Ada Lovelace**, la pionera de la programación. La aplicación utiliza Google Gemini AI para generar respuestas coherentes y en el tono del personaje.
+Una Single Page Application interactiva que permite conversar con una versión de IA de **Gandalf el Gris**, el mago sabio de la Tierra Media. La aplicación utiliza Google Gemini AI para generar respuestas coherentes y en el tono del personaje.
 
 ## 🎯 Características
 
 - ✅ **SPA con Routing**: Navegación fluida sin recargas usando History API
 - ✅ **Responsive Design**: Optimizado para móvil, tablet y desktop (mobile-first)
-- ✅ **Chat Interactivo**: Conversación en tiempo real con Ada Lovelace
+- ✅ **Chat Interactivo**: Conversación en tiempo real con Gandalf el Gris
 - ✅ **API Segura**: Vercel Serverless Functions protegen la API key
 - ✅ **Historial de Sesión**: Mantiene el contexto de la conversación durante la sesión
 - ✅ **Tests Unitarios**: Suite de tests con Vitest (8+ tests)
@@ -101,27 +101,27 @@ npm run preview
 
 | Ruta | Descripción |
 |------|-------------|
-| `/home` | Página de inicio con información de Ada |
+| `/home` | Página de inicio con información de Gandalf |
 | `/chat` | Interfaz de chat interactivo |
 | `/about` | Información del proyecto y créditos |
 
-## 🤖 Sobre el Personaje: Ada Lovelace
+## 🤖 Sobre el Personaje: Gandalf el Gris
 
-**Augusta Ada King, Condesa de Lovelace (1815-1852)** fue una matemática inglesa que:
+**Gandalf el Gris** es un mago de la Tierra Media que:
 
-- Describió el primer algoritmo destinado a ser procesado por máquina
-- Es considerada la primera programadora del mundo
-- Hizo contribuciones visionarias que anticiparon la era moderna de la computación
-- Trabajó con Charles Babbage en la máquina analítica
+- Es un protector de la Tierra Media y defensor de la esperanza contra la oscuridad
+- Dirige con consejo sabio, historias antiguas y firmeza amable
+- Conoce la historia de Elfos, Hombres, Enanos y criaturas mágicas
+- Su voz inspira valor, perseverancia y compasión
 
 ### System Prompt
 
-El `system prompt` define cómo habla Ada. Incluye:
+El `system prompt` define cómo habla Gandalf. Incluye:
 
-- **Personalidad**: Sofisticada, educada, apasionada
-- **Temas**: Matemática, computación, máquina analítica, historia
-- **Tono**: Formal pero amigable, preciso pero accesible
-- **Limitaciones**: Respuestas cortas, sin código, enfocado en conceptos
+- **Personalidad**: Sabio, paciente, serio y esperanzador
+- **Temas**: Tierra Media, magia, historia, valor, amistad
+- **Tono**: Noble y accesible, preciso pero sencillo
+- **Limitaciones**: Respuestas cortas, sin spoilers, comparaciones con sabiduría antigua
 
 Ver [chat.js](src/chat.js) para el prompt completo.
 
@@ -246,7 +246,7 @@ vercel
 # Para verificar que las serverless functions funcionan:
 # 1. Abre el chat
 # 2. Envía un mensaje
-# 3. Verifica que Ada responda
+# 3. Verifica que Gandalf responda
 ```
 
 ## 🐛 Debugging
