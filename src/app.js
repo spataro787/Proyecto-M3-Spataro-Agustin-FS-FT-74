@@ -363,5 +363,3 @@ if (document.readyState === 'loading') {
 } else {
     initializeApp();
 }
-
-export { router: Router, chatUI: ChatUI, chatManager: ChatManager };
