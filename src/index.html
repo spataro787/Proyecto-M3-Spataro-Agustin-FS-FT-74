@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ada Lovelace AI Chat - SPA</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="root">
+        <header class="app-header">
+            <div class="header-container">
+                <h1 class="app-title">Ada's Chat</h1>
+                <nav class="navigation">
+                    <button class="nav-link active" data-route="/home" aria-label="Inicio">Inicio</button>
+                    <button class="nav-link" data-route="/chat" aria-label="Chat">Chat</button>
+                    <button class="nav-link" data-route="/about" aria-label="Acerca de">Acerca de</button>
+                </nav>
+            </div>
+        </header>
+
+        <main class="app-main">
+            <!-- Home View -->
+            <section id="home-view" class="view home-view hidden">
+                <div class="container">
+                    <div class="hero">
+                        <div class="hero-content">
+                            <h2 class="hero-title">Bienvenido a Ada Lovelace AI</h2>
+                            <p class="hero-subtitle">Una conversación con la pionera de la programación</p>
+                            <div class="character-avatar">
+                                <span class="avatar-icon">👩‍💻</span>
+                            </div>
+                            <p class="character-description">
+                                Soy Ada Lovelace, matemática visionaria e ideadora del primer algoritmo destinado a ser procesado por máquina. 
+                                Mi pasión es explorar la relación entre máquinas, números y la mente humana.
+                            </p>
+                            <button class="btn btn-primary" data-route="/chat">
+                                Empezar a Chatear
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Chat View -->
+            <section id="chat-view" class="view chat-view hidden">
+                <div class="chat-container">
+                    <div class="chat-header">
+                        <div class="chat-info">
+                            <h2 class="chat-title">Chat con Ada</h2>
+                            <p class="chat-status">Conectado</p>
+                        </div>
+                    </div>
+
+                    <div class="chat-messages" id="messages-container">
+                        <div class="message system-message">
+                            <div class="message-content">
+                                <p>Hola, soy Ada Lovelace. ¿En qué puedo ayudarte hoy? Puedo hablar sobre programación, matemáticas, computación y mi vida.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chat-input-section">
+                        <form class="chat-form" id="chat-form">
+                            <textarea 
+                                id="message-input" 
+                                class="message-input" 
+                                placeholder="Escribe tu pregunta..." 
+                                aria-label="Campo de entrada de mensajes"
+                                rows="1"
+                            ></textarea>
+                            <button type="submit" class="btn btn-send" aria-label="Enviar mensaje">
+                                <span>Enviar</span>
+                            </button>
+                        </form>
+                        <div class="chat-status-loading hidden" id="loading-status">
+                            <span class="spinner"></span>
+                            <p>Ada está escribiendo...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- About View -->
+            <section id="about-view" class="view about-view hidden">
+                <div class="container">
+                    <div class="about-content">
+                        <h2>Sobre Este Proyecto</h2>
+                        <div class="about-section">
+                            <h3>¿Qué es Ada Lovelace AI Chat?</h3>
+                            <p>
+                                Una Single Page Application interactiva que permite conversar con una versión de IA del personaje de Ada Lovelace. 
+                                La aplicación utiliza Google Gemini AI para generar respuestas coherentes y en el tono del personaje.
+                            </p>
+                        </div>
+
+                        <div class="about-section">
+                            <h3>Características Técnicas</h3>
+                            <ul>
+                                <li><strong>SPA con Routing:</strong> Navegación fluida sin recargas usando History API</li>
+                                <li><strong>Responsive Design:</strong> Optimizado para móvil, tablet y desktop</li>
+                                <li><strong>API Segura:</strong> Usa Vercel Serverless Functions para proteger la API key</li>
+                                <li><strong>Context Memory:</strong> Mantiene el historial de conversación durante la sesión</li>
+                                <li><strong>Tests Unitarios:</strong> Código testeado con Vitest</li>
+                            </ul>
+                        </div>
+
+                        <div class="about-section">
+                            <h3>Sobre Ada Lovelace</h3>
+                            <p>
+                                Augusta Ada King, Condesa de Lovelace (1815-1852) fue una matemática inglesa que describió el primer algoritmo destinado a ser procesado por máquina. 
+                                Es considerada la primera programadora del mundo. Ada hizo contribuciones visionarias que anticiparon la era moderna de la computación.
+                            </p>
+                        </div>
+
+                        <div class="about-section">
+                            <h3>Créditos Técnicos</h3>
+                            <ul>
+                                <li>Frontend: HTML5, CSS3, JavaScript Vanilla</li>
+                                <li>Backend: Vercel Serverless Functions</li>
+                                <li>AI: Google Gemini API</li>
+                                <li>Testing: Vitest</li>
+                                <li>Deployment: Vercel</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="app-footer">
+            <p>&copy; 2026 Ada Lovelace AI Chat | Proyecto de SPA</p>
+        </footer>
+    </div>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>

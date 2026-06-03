@@ -1,0 +1,33 @@
+{
+  "name": "ada-ai-chat",
+  "version": "1.0.0",
+  "description": "Single Page Application - Chat with Ada Lovelace, powered by Google Gemini AI",
+  "main": "src/index.html",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage"
+  },
+  "keywords": [
+    "spa",
+    "chat",
+    "ai",
+    "gemini",
+    "ada-lovelace"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "@vitest/ui": "^1.2.0",
+    "happy-dom": "^20.9.0",
+    "vite": "^5.0.0",
+    "vitest": "^1.2.0",
+    "vitest-dom": "^0.1.0"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.3.0"
+  }
+}

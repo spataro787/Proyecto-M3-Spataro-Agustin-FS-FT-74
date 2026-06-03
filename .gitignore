@@ -1,0 +1,41 @@
+# Dependencias
+node_modules/
+*.pnp
+.pnp.js
+
+# Variables de entorno
+.env
+.env.local
+.env.*.local
+
+# Archivos de build
+dist/
+build/
+out/
+
+# IDE y editores
+.vscode/
+.idea/
+*.suo
+*.sln
+*.csproj
+*.swp
+*.swo
+*~
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+coverage/
+.nyc_output/
+
+# Vercel
+.vercel/
