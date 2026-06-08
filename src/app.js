@@ -177,11 +177,7 @@ class Router {
      * Inicializa la interfaz del chat
      */
     initializeChatUI() {
-        const messagesContainer = document.getElementById('messages-container');
-        if (messagesContainer && messagesContainer.children.length <= 1) {
-            // El chat ya está inicializado con el mensaje de bienvenida
-            this.renderMessages();
-        }
+        this.renderMessages();
     }
 
     /**
@@ -191,26 +187,14 @@ class Router {
         const messagesContainer = document.getElementById('messages-container');
         if (!messagesContainer) return;
 
-        // Limpiar container (excepto mantener primer mensaje de bienvenida)
+        messagesContainer.innerHTML = '';
+
         const messages = chatManager.getMessages();
-        const existingMessages = messagesContainer.querySelectorAll('.message');
-
-        // Si ya están renderizados, saltar
-        if (existingMessages.length >= messages.length) {
-            return;
-        }
-
-        // Renderizar solo los nuevos mensajes
         messages.forEach((msg) => {
-            // Verificar si el mensaje ya está en el DOM
-            const exists = Array.from(existingMessages).some(el => el.dataset.messageId === msg.id);
-            if (!exists) {
-                const messageEl = this.createMessageElement(msg);
-                messagesContainer.appendChild(messageEl);
-            }
+            const messageEl = this.createMessageElement(msg);
+            messagesContainer.appendChild(messageEl);
         });
 
-        // Scroll al final
         this.scrollToBottom();
     }
 

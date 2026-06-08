@@ -1,6 +1,6 @@
 # Gandalf el Gris AI Chat - Single Page Application
 
-Una Single Page Application interactiva que permite conversar con una versión de IA de **Gandalf el Gris**, el mago sabio de la Tierra Media. La aplicación utiliza Google Gemini AI para generar respuestas coherentes y en el tono del personaje.
+Una Single Page Application interactiva que permite conversar con una versión de IA de **Gandalf el Gris**. La aplicación utiliza Google Gemini AI para generar respuestas coherentes y en el tono del personaje.
 
 ## 🎯 Características
 
@@ -33,39 +33,64 @@ cd ai-chat-spa
 npm install
 ```
 
-### 3. Configurar variables de entorno
+### 3. Obtener API Key de Google Gemini
 
-Crear un archivo `.env` basado en `.env.example`:
+**Este paso es REQUERIDO para que el chat funcione.**
+
+#### Opción A: Usando Google AI Studio (Recomendado para desarrollo)
+
+1. Ve a [Google AI Studio](https://makersuite.google.com/app/apikey)
+2. Haz clic en **"Create API Key"** → **"Create new secret key in new project"**
+3. Copia la API key generada
+4. La clave se ve así: `AIzaSy...` (una cadena larga alfanumérica)
+
+#### Opción B: Usando Google Cloud Console (Para producción)
+
+1. Ve a [Google Cloud Console](https://console.cloud.google.com/)
+2. Crea un nuevo proyecto
+3. Ve a "APIs & Services" → "Credentials"
+4. Crea una nueva API Key
+5. Habilita Google Generative AI API para tu proyecto
+
+### 4. Configurar variables de entorno
+
+Crea un archivo `.env` en la raíz del proyecto:
 
 ```bash
 cp .env.example .env
 ```
 
-Editar `.env` y configurar:
+Abre `.env` y agrega tu API key:
 
+```env
+GOOGLE_GEMINI_API_KEY=tu_api_key_aqui
 ```
-VITE_API_BASE_URL=http://localhost:5173/api
-VITE_ENVIRONMENT=development
-```
 
-**Para despliegue en Vercel**, configurar en el dashboard:
-- `GOOGLE_GEMINI_API_KEY`: Tu API key de Google Gemini
+Reemplaza `tu_api_key_aqui` con tu API key real de Google.
 
-### 4. Obtener API Key de Gemini
+#### Para Despliegue en Vercel
 
-1. Ve a [Google AI Studio](https://aistudio.google.com/app/apikey)
-2. Haz clic en "Create API Key"
-3. Copia la clave y guárdala en `.env` o en Vercel
+1. Ve a tu proyecto en [Vercel Dashboard](https://vercel.com/dashboard)
+2. Abre **Settings** → **Environment Variables**
+3. Agrega una nueva variable:
+   - **Name**: `GOOGLE_GEMINI_API_KEY`
+   - **Value**: Tu API key de Google Gemini
+4. Haz deploy nuevamente para que los cambios tomen efecto
+
+**⚠️ IMPORTANTE**: 
+- NUNCA hagas commit del `.env` con tu API key real (está en `.gitignore`)
+- Mantén tu API key segura, no la compartas en redes sociales o repositorios públicos
+- Google Gemini tiene un tier gratuito generoso para desarrollo
 
 ## 💻 Uso
 
-### Desarrollo Local
+### Generar archivos estáticos
 
 ```bash
-npm run dev
+npm run build
 ```
 
-La aplicación estará disponible en `http://localhost:5173`
+Esto copia los archivos dentro de `src/` a `dist/` para despliegue.
 
 ### Ejecutar Tests
 
@@ -141,7 +166,8 @@ ai-chat-spa/
 │   ├── utils.test.js          # Tests para funciones de utilidad
 │   └── chat.test.js           # Tests para ChatManager
 ├── package.json               # Dependencias y scripts
-├── vite.config.js             # Configuración de Vite
+├── scripts/                   # Scripts de construcción y utilidades
+│   └── build.js               # Copia archivos estáticos a dist
 ├── vitest.config.js           # Configuración de Vitest
 ├── vercel.json                # Configuración de Vercel
 ├── .env.example               # Plantilla de variables de entorno
@@ -259,7 +285,7 @@ La aplicación usa `debugLog()` que solo muestra logs en desarrollo:
 import { debugLog } from './utils.js';
 
 debugLog('Mi mensaje', { datos: 'aquí' });
-// Solo se muestra cuando VITE_ENVIRONMENT = development
+// Solo se muestra cuando el entorno es development
 ```
 
 ### Ver Logs en Vercel
@@ -285,8 +311,7 @@ export function debugLog(message, data = null) {
 ### Desarrollo (.env)
 
 ```env
-VITE_API_BASE_URL=http://localhost:5173/api
-VITE_ENVIRONMENT=development
+GOOGLE_GEMINI_API_KEY=tu_api_key_aqui
 ```
 
 ### Producción (Vercel)
@@ -368,7 +393,6 @@ git push origin main
 
 ## 📚 Recursos Útiles
 
-- [Vite Docs](https://vitejs.dev)
 - [Vitest Docs](https://vitest.dev)
 - [Google Gemini API](https://ai.google.dev)
 - [Vercel Docs](https://vercel.com/docs)

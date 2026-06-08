@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gandalf el Gris AI Chat - SPA</title>
+    <title>Gandalf AI Chat - SPA</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -25,13 +25,13 @@
                 <div class="container">
                     <div class="hero">
                         <div class="hero-content">
-                            <h2 class="hero-title">Bienvenido a Gandalf el Gris AI</h2>
-                            <p class="hero-subtitle">Una conversación con el mago sabio de la Tierra Media</p>
+                            <h2 class="hero-title">Bienvenido a Gandalf AI Chat</h2>
+                            <p class="hero-subtitle">Una conversación con el sabio mago de la Tierra Media</p>
                             <div class="character-avatar">
                                 <span class="avatar-icon">🧙‍♂️</span>
                             </div>
                             <p class="character-description">
-                                Soy Gandalf el Gris, mago de la Tierra Media. Mis palabras guían a viajeros, héroes y curiosos hacia el valor, la esperanza y el conocimiento antiguo.
+                                Habla con Gandalf el Gris y recibe respuestas llenas de consejo, valor y sabiduría antigua.
                             </p>
                             <button class="btn btn-primary" data-route="/chat">
                                 Empezar a Chatear
@@ -46,18 +46,12 @@
                 <div class="chat-container">
                     <div class="chat-header">
                         <div class="chat-info">
-                            <h2 class="chat-title">Chat con Gandalf</h2>
-                            <p class="chat-status">Conectado</p>
+                            <h2 class="chat-title" id="chat-title">Chat con Gandalf el Gris</h2>
+                            <p class="chat-status" id="chat-status">Conectado</p>
                         </div>
                     </div>
 
-                    <div class="chat-messages" id="messages-container">
-                        <div class="message system-message">
-                            <div class="message-content">
-                                <p>Hola, soy Gandalf el Gris. ¿En qué puedo ayudarte hoy? Puedo hablar sobre la Tierra Media, la magia, la historia y el valor.</p>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="chat-messages" id="messages-container"></div>
 
                     <div class="chat-input-section">
                         <form class="chat-form" id="chat-form">

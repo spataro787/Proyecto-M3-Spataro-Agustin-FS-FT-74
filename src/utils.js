@@ -112,7 +112,7 @@ export function containsUrls(text) {
  * @returns {string} 'development' o 'production'
  */
 export function getEnvironment() {
-    return import.meta.env.MODE || 'development';
+    return typeof import.meta.env !== 'undefined' && import.meta.env.MODE ? import.meta.env.MODE : 'development';
 }
 
 /**

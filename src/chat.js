@@ -43,9 +43,8 @@ class ChatManager {
     constructor() {
         this.messages = [];
         this.isLoading = false;
-        this.apiBaseUrl = import.meta.env.VITE_API_BASE_URL || '/api';
+        this.apiBaseUrl = '/api';
     }
-
     /**
      * Agrega un mensaje al historial
      * @param {object} message - Objeto mensaje creado con createMessage()
@@ -142,7 +141,6 @@ class ChatManager {
             return data.reply;
         } catch (error) {
             debugLog('Error en sendMessage:', error);
-            // Remover el último mensaje del usuario si hubo error
             if (this.messages.length > 0 && this.messages[this.messages.length - 1].sender === 'user') {
                 this.messages.pop();
             }
