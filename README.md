@@ -9,7 +9,7 @@ Una Single Page Application interactiva que permite conversar con una versión d
 - ✅ **Chat Interactivo**: Conversación en tiempo real con Gandalf el Gris
 - ✅ **API Segura**: Vercel Serverless Functions protegen la API key
 - ✅ **Historial de Sesión**: Mantiene el contexto de la conversación durante la sesión
-- ✅ **Tests Unitarios**: Suite de tests con Vitest (8+ tests)
+- ✅ **Sin Vite ni Vitest**: Funciona como sitio estático con un build Node simple
 - ✅ **Accesibilidad**: Soporte para navegación por teclado y modo oscuro
 
 ## 📋 Requisitos
@@ -20,6 +20,12 @@ Una Single Page Application interactiva que permite conversar con una versión d
 - Cuenta de Vercel (para despliegue)
 
 ## 🚀 Instalación Local
+
+### Enlace activo en Vercel
+
+El proyecto ya está desplegado en Vercel y se puede ver aquí:
+
+https://ai-chat-a4byzkn5n-agustin-s-projects26.vercel.app
 
 ### 1. Clonar o descargar el proyecto
 
@@ -63,7 +69,7 @@ cp .env.example .env
 Abre `.env` y agrega tu API key:
 
 ```env
-GOOGLE_GEMINI_API_KEY=tu_api_key_aqui
+GEMINI_API_KEY=tu_api_key_aqui
 ```
 
 Reemplaza `tu_api_key_aqui` con tu API key real de Google.
@@ -73,7 +79,7 @@ Reemplaza `tu_api_key_aqui` con tu API key real de Google.
 1. Ve a tu proyecto en [Vercel Dashboard](https://vercel.com/dashboard)
 2. Abre **Settings** → **Environment Variables**
 3. Agrega una nueva variable:
-   - **Name**: `GOOGLE_GEMINI_API_KEY`
+   - **Name**: `GEMINI_API_KEY`
    - **Value**: Tu API key de Google Gemini
 4. Haz deploy nuevamente para que los cambios tomen efecto
 
@@ -92,21 +98,14 @@ npm run build
 
 Esto copia los archivos dentro de `src/` a `dist/` para despliegue.
 
-### Ejecutar Tests
+### Ejecutar el proyecto localmente sin Vite
 
 ```bash
-# Ejecutar tests una vez
-npm test
-
-# Modo watch (ejecuta tests en tiempo real)
-npm test -- --watch
-
-# Con interfaz gráfica
-npm run test:ui
-
-# Con cobertura
-npm run test:coverage
+npm install
+npm run dev
 ```
+
+Esto genera los archivos estáticos en `dist/` y sirve la aplicación localmente en el puerto `5173`.
 
 ### Build para Producción
 
@@ -155,7 +154,7 @@ Ver [chat.js](src/chat.js) para el prompt completo.
 ```
 ai-chat-spa/
 ├── api/
-│   └── functions.js           # Vercel Serverless Function (proxy para Gemini)
+│   └── chat.js                # Vercel Serverless Function (proxy para Gemini)
 ├── src/
 │   ├── index.html             # HTML principal
 │   ├── styles.css             # Estilos CSS mobile-first
@@ -168,7 +167,6 @@ ai-chat-spa/
 ├── package.json               # Dependencias y scripts
 ├── scripts/                   # Scripts de construcción y utilidades
 │   └── build.js               # Copia archivos estáticos a dist
-├── vitest.config.js           # Configuración de Vitest
 ├── vercel.json                # Configuración de Vercel
 ├── .env.example               # Plantilla de variables de entorno
 ├── .gitignore                 # Archivos a ignorar
@@ -185,7 +183,7 @@ La API key de Gemini **NUNCA** está expuesta en el frontend. El flujo es:
 Frontend (cliente) 
   → fetch a /api/chat
   → Vercel Serverless Function
-  → Lee GOOGLE_GEMINI_API_KEY desde variables de entorno
+  → Lee GEMINI_API_KEY desde variables de entorno
   → Llama a Gemini API
   → Devuelve respuesta al cliente
 ```
@@ -197,26 +195,9 @@ Frontend (cliente)
 - CORS configurado para Vercel
 - Rate limiting mediante configuración de Vercel
 
-## 📊 Tests Unitarios
+## 📊 Pruebas de Referencia
 
-La suite incluye más de 8 tests que cubren:
-
-### utils.test.js (8 test suites)
-- ✅ `parseApiResponse()` - Parseo de respuestas
-- ✅ `isValidMessage()` - Validación de mensajes
-- ✅ `cleanMessage()` - Limpieza de texto
-- ✅ `createMessage()` - Creación de mensajes
-- ✅ `formatMessagesForApi()` - Formato para API
-- ✅ `formatTime()` - Formateo de horas
-- ✅ `escapeHtml()` - Escaping HTML
-- ✅ `containsUrls()` - Detección de URLs
-
-### chat.test.js (6 test suites)
-- ✅ Gestión de mensajes
-- ✅ Estados de carga
-- ✅ Mensaje de bienvenida
-- ✅ Obtención de mensajes
-- ✅ Interfaz de API
+La carpeta `tests/` contiene ejemplos de pruebas para las funciones del proyecto, pero la versión actual ya no depende de Vitest para ejecutarse localmente.
 
 ## 📱 Responsive Design
 
@@ -251,7 +232,7 @@ La aplicación soporta modo oscuro automáticamente:
 1. Sube el proyecto a GitHub
 2. Ve a [Vercel](https://vercel.com) y conecta tu repositorio
 3. Configura las variables de entorno en Project Settings:
-   - `GOOGLE_GEMINI_API_KEY`: Tu API key de Gemini
+   - `GEMINI_API_KEY`: Tu API key de Gemini
 4. Deploy automático al hacer push a `main`
 
 ### Opción 2: CLI de Vercel
@@ -311,14 +292,14 @@ export function debugLog(message, data = null) {
 ### Desarrollo (.env)
 
 ```env
-GOOGLE_GEMINI_API_KEY=tu_api_key_aqui
+GEMINI_API_KEY=tu_api_key_aqui
 ```
 
 ### Producción (Vercel)
 
 Configurar solo en dashboard de Vercel:
 ```
-GOOGLE_GEMINI_API_KEY=sk-...
+GEMINI_API_KEY=sk-...
 ```
 
 ⚠️ **NUNCA** subas `.env` al repositorio. Está incluido en `.gitignore`.
@@ -361,23 +342,19 @@ function myFunction(name) {
 **Problema**: Error 500 al enviar mensaje
 **Solución**: 
 ```bash
-# Verificar que GOOGLE_GEMINI_API_KEY está en Vercel dashboard
+# Verificar que GEMINI_API_KEY está en Vercel dashboard
 vercel env ls
 ```
 
 ### "CORS error"
 
 **Problema**: Cross-origin request blocked
-**Solución**: Vercel configura CORS automáticamente. Si persiste, revisar `api/functions.js`
+**Solución**: Vercel configura CORS automáticamente. Si persiste, revisar `api/chat.js`
 
 ### Tests fallan
 
-**Problema**: Vitest reporta errores
-**Solución**: 
-```bash
-npm install
-npm test -- --reporter=verbose
-```
+**Problema**: Hay pruebas de referencia pero no hay runner configurado.
+**Solución**: El proyecto local se ejecuta con `npm run dev` y la aplicación es estática.
 
 ### Cambios no aparecen en Vercel
 
@@ -393,7 +370,6 @@ git push origin main
 
 ## 📚 Recursos Útiles
 
-- [Vitest Docs](https://vitest.dev)
 - [Google Gemini API](https://ai.google.dev)
 - [Vercel Docs](https://vercel.com/docs)
 - [History API MDN](https://developer.mozilla.org/es/docs/Web/API/History_API)

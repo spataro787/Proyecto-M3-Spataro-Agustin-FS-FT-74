@@ -5,11 +5,8 @@
   "main": "src/index.html",
   "scripts": {
     "build": "node ./scripts/build.js",
-    "dev": "vite",
-    "preview": "vite preview",
-    "test": "vitest",
-    "test:ui": "vitest --ui",
-    "test:coverage": "vitest --coverage"
+    "dev": "npm run build && npx http-server dist -p 5173",
+    "start": "npm run dev"
   },
   "keywords": [
     "spa",
@@ -21,14 +18,7 @@
   "author": "Your Name",
   "license": "MIT",
   "devDependencies": {
-    "@vitest/ui": "^1.2.0",
-    "happy-dom": "^20.9.0",
-    "http-server": "^14.1.1",
-    "vite": "^8.0.16",
-    "vitest": "^1.2.0",
-    "vitest-dom": "^0.1.0"
+    "http-server": "^14.1.1"
   },
-  "dependencies": {
-    "@google/generative-ai": "^0.3.0"
-  }
+  "dependencies": {}
 }

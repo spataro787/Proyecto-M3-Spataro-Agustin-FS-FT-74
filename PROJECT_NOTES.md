@@ -22,7 +22,7 @@ FEATURES IMPLEMENTADAS:
 ✅ Accesibilidad (ARIA labels, navegación por teclado)
 
 ESTRUCTURA DE ARCHIVOS:
-/api/functions.js - Serverless Function que protege API key
+/api/chat.js - Serverless Function que protege API key
 /src/index.html - HTML responsive
 /src/styles.css - CSS mobile-first con variables y breakpoints
 /src/app.js - Router SPA y lógica principal
@@ -47,7 +47,7 @@ npm run dev
 PARA DESPLEGAR EN VERCEL:
 1. Subir a GitHub
 2. Conectar repo en Vercel
-3. Configurar GOOGLE_GEMINI_API_KEY en environment variables
+3. Configurar GEMINI_API_KEY en environment variables
 4. Deploy automático
 
 BUENAS PRÁCTICAS IMPLEMENTADAS:

@@ -1,131 +1,72 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gandalf AI Chat - SPA</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gandalf AI Chat</title>
+  <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
-    <div id="root">
-        <header class="app-header">
-            <div class="header-container">
-                <h1 class="app-title">Gandalf AI Chat</h1>
-                <nav class="navigation">
-                    <button class="nav-link active" data-route="/home" aria-label="Inicio">Inicio</button>
-                    <button class="nav-link" data-route="/chat" aria-label="Chat">Chat</button>
-                    <button class="nav-link" data-route="/about" aria-label="Acerca de">Acerca de</button>
-                </nav>
+  <div id="root">
+    <header class="app-header">
+      <div class="header-container">
+        <div class="app-title">Gandalf AI Chat</div>
+        <nav class="navigation" role="navigation" aria-label="Navegación principal">
+          <button class="nav-link" type="button" data-route="/home">Inicio</button>
+          <button class="nav-link" type="button" data-route="/chat">Chat</button>
+          <button class="nav-link" type="button" data-route="/about">Acerca</button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="app-main">
+      <section id="home-view" class="view home-view active">
+        <div class="container hero">
+          <div class="hero-content">
+            <div class="character-avatar" aria-hidden="true">
+              <span class="avatar-icon">🧙‍♂️</span>
             </div>
-        </header>
+            <h1 class="hero-title">Bienvenido al Chat de Gandalf</h1>
+            <p class="hero-subtitle">Habla con Gandalf el Gris y recibe consejos sabios de la Tierra Media.</p>
+            <p class="character-description">Conéctate con el sabio mago y pregunta sobre aventuras, valor y el destino de la Tierra Media.</p>
+            <button class="nav-link" type="button" data-route="/chat">Ir al Chat</button>
+          </div>
+        </div>
+      </section>
 
-        <main class="app-main">
-            <!-- Home View -->
-            <section id="home-view" class="view home-view hidden">
-                <div class="container">
-                    <div class="hero">
-                        <div class="hero-content">
-                            <h2 class="hero-title">Bienvenido a Gandalf AI Chat</h2>
-                            <p class="hero-subtitle">Una conversación con el sabio mago de la Tierra Media</p>
-                            <div class="character-avatar">
-                                <span class="avatar-icon">🧙‍♂️</span>
-                            </div>
-                            <p class="character-description">
-                                Habla con Gandalf el Gris y recibe respuestas llenas de consejo, valor y sabiduría antigua.
-                            </p>
-                            <button class="btn btn-primary" data-route="/chat">
-                                Empezar a Chatear
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </section>
+      <section id="chat-view" class="view chat-view hidden">
+        <div class="container">
+          <div class="chat-header">
+            <div class="chat-info">
+              <h2 class="chat-title">Gandalf el Gris</h2>
+              <p class="chat-status">Listo para conversar contigo</p>
+            </div>
+          </div>
+          <div id="messages-container" class="chat-messages"></div>
+          <form id="chat-form" class="chat-form">
+            <textarea id="message-input" class="message-input" rows="2" placeholder="Escribe tu mensaje..." aria-label="Mensaje"></textarea>
+            <div class="chat-actions">
+              <span id="loading-status" class="chat-status-loading hidden">Gandalf está escribiendo...</span>
+              <button class="nav-link" type="submit">Enviar</button>
+            </div>
+          </form>
+        </div>
+      </section>
 
-            <!-- Chat View -->
-            <section id="chat-view" class="view chat-view hidden">
-                <div class="chat-container">
-                    <div class="chat-header">
-                        <div class="chat-info">
-                            <h2 class="chat-title" id="chat-title">Chat con Gandalf el Gris</h2>
-                            <p class="chat-status" id="chat-status">Conectado</p>
-                        </div>
-                    </div>
+      <section id="about-view" class="view about-view hidden">
+        <div class="container">
+          <h2>Acerca de este proyecto</h2>
+          <p>Este SPA usa Vite y una API de chat para simular un asistente inspirado en Gandalf el Gris.</p>
+          <p>Selecciona la pestaña "Chat" para comenzar la conversación.</p>
+        </div>
+      </section>
+    </main>
 
-                    <div class="chat-messages" id="messages-container"></div>
+    <footer class="app-footer">
+      <p>Gandalf AI Chat &copy; 2026</p>
+    </footer>
+  </div>
 
-                    <div class="chat-input-section">
-                        <form class="chat-form" id="chat-form">
-                            <textarea 
-                                id="message-input" 
-                                class="message-input" 
-                                placeholder="Escribe tu pregunta..." 
-                                aria-label="Campo de entrada de mensajes"
-                                rows="1"
-                            ></textarea>
-                            <button type="submit" class="btn btn-send" aria-label="Enviar mensaje">
-                                <span>Enviar</span>
-                            </button>
-                        </form>
-                        <div class="chat-status-loading hidden" id="loading-status">
-                            <span class="spinner"></span>
-                            <p>Gandalf está escribiendo...</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- About View -->
-            <section id="about-view" class="view about-view hidden">
-                <div class="container">
-                    <div class="about-content">
-                        <h2>Sobre Este Proyecto</h2>
-                        <div class="about-section">
-                            <h3>¿Qué es Gandalf AI Chat?</h3>
-                            <p>
-                                Una Single Page Application interactiva que permite conversar con una versión de IA del personaje Gandalf el Gris. 
-                                La aplicación utiliza Google Gemini AI para generar respuestas coherentes y en el tono del personaje.
-                            </p>
-                        </div>
-
-                        <div class="about-section">
-                            <h3>Características Técnicas</h3>
-                            <ul>
-                                <li><strong>SPA con Routing:</strong> Navegación fluida sin recargas usando History API</li>
-                                <li><strong>Responsive Design:</strong> Optimizado para móvil, tablet y desktop</li>
-                                <li><strong>API Segura:</strong> Usa Vercel Serverless Functions para proteger la API key</li>
-                                <li><strong>Context Memory:</strong> Mantiene el historial de conversación durante la sesión</li>
-                                <li><strong>Tests Unitarios:</strong> Código testeado con Vitest</li>
-                            </ul>
-                        </div>
-
-                        <div class="about-section">
-                            <h3>Sobre Gandalf el Gris</h3>
-                            <p>
-                                Gandalf el Gris es un mago de la Tierra Media, miembro de la Comunidad del Anillo y guardián de la esperanza en tiempos oscuros. 
-                                Conoce la historia de naciones antiguas, criaturas mágicas y la lucha entre el bien y el mal.
-                            </p>
-                        </div>
-
-                        <div class="about-section">
-                            <h3>Créditos Técnicos</h3>
-                            <ul>
-                                <li>Frontend: HTML5, CSS3, JavaScript Vanilla</li>
-                                <li>Backend: Vercel Serverless Functions</li>
-                                <li>AI: Google Gemini API</li>
-                                <li>Testing: Vitest</li>
-                                <li>Deployment: Vercel</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
-
-        <footer class="app-footer">
-            <p>&copy; 2026 Gandalf AI Chat | Proyecto de SPA</p>
-        </footer>
-    </div>
-
-    <script type="module" src="app.js"></script>
+  <script type="module" src="./app.js"></script>
 </body>
 </html>
