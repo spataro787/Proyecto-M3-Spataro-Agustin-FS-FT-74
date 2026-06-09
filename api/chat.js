@@ -31,19 +31,12 @@ export default async function handler(req, res) {
 
     try {
         // Validar que la API key está configurada
-      onst apiKey = process.env.GEMINI_API_KEY;
-
-console.log("API Key encontrada:", !!apiKey);
-
-if (apiKey) {
-    console.log("Primeros caracteres:", apiKey.substring(0, 10));
-}
-
-if (!apiKey) {
-    console.error('Error: GEMINI_API_KEY no está configurada');
-    return res.status(500).json({
-        error: 'Configuración del servidor incompleta. API key no configurada.'
-    });
+        const apiKey = process.env.GEMINI_API_KEY;
+        if (!apiKey) {
+            console.error('Error: GEMINI_API_KEY no está configurada');
+            return res.status(500).json({
+                error: 'Configuración del servidor incompleta. API key no configurada.'
+            });
         }
 
         // Obtener datos del request
@@ -76,7 +69,7 @@ if (!apiKey) {
 
         // Realizar llamada a Google Gemini API
         const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
             {
                 method: 'POST',
                 headers: {
