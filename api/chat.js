@@ -68,50 +68,67 @@ export default async function handler(req, res) {
         }));
 
         // Realizar llamada a Google Gemini API
-        const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
+        // Realizar llamada a Google Gemini API con reintentos
+let response;
+let data;
+
+for (let intento = 1; intento <= 3; intento++) {
+
+    response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                system_instruction: {
+                    parts: {
+                        text: systemPrompt
+                    }
                 },
-                body: JSON.stringify({
-                    system_instruction: {
-                        parts: {
-                            text: systemPrompt
-                        }
+                contents: contents,
+                generationConfig: {
+                    temperature: 0.7,
+                    topK: 40,
+                    topP: 0.95,
+                    maxOutputTokens: 256,
+                },
+                safetySettings: [
+                    {
+                        category: 'HARM_CATEGORY_HARASSMENT',
+                        threshold: 'BLOCK_MEDIUM_AND_ABOVE',
                     },
-                    contents: contents,
-                    generationConfig: {
-                        temperature: 0.7,
-                        topK: 40,
-                        topP: 0.95,
-                        maxOutputTokens: 256,
+                    {
+                        category: 'HARM_CATEGORY_HATE_SPEECH',
+                        threshold: 'BLOCK_MEDIUM_AND_ABOVE',
                     },
-                    safetySettings: [
-                        {
-                            category: 'HARM_CATEGORY_HARASSMENT',
-                            threshold: 'BLOCK_MEDIUM_AND_ABOVE',
-                        },
-                        {
-                            category: 'HARM_CATEGORY_HATE_SPEECH',
-                            threshold: 'BLOCK_MEDIUM_AND_ABOVE',
-                        },
-                        {
-                            category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
-                            threshold: 'BLOCK_MEDIUM_AND_ABOVE',
-                        },
-                        {
-                            category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
-                            threshold: 'BLOCK_MEDIUM_AND_ABOVE',
-                        }
-                    ]
-                })
-            }
-        );
+                    {
+                        category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
+                        threshold: 'BLOCK_MEDIUM_AND_ABOVE',
+                    },
+                    {
+                        category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
+                        threshold: 'BLOCK_MEDIUM_AND_ABOVE',
+                    }
+                ]
+            })
+        }
+    );
 
-        const data = await response.json();
+    data = await response.json();
 
+    // Si no es 503, salir del bucle
+    if (response.status !== 503) {
+        break;
+    }
+
+    console.log(`Gemini ocupado. Reintento ${intento}/3`);
+
+    if (intento < 3) {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+    }
+}
         // Manejar errores de la API de Gemini
         if (!response.ok) {
             console.error('Error de Gemini API:', data);
