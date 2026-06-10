@@ -377,11 +377,11 @@ git push origin main
 
 ## 📝 Licencia
 
-MIT - Libre para usar en proyectos personales y comerciales
+Este proyecto fue desarrollado con fines educativos y de aprendizaje, con apoyo y asistencia en su construcción.
 
 ## 👨‍💻 Autor
 
-Creado como proyecto de Single Page Application.
+Agustin spataro 
 
 ---
 

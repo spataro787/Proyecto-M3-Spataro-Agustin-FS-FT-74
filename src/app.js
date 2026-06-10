@@ -54,8 +54,7 @@ class Router {
     handleChatRoute = () => {
         debugLog('Navegando a /chat');
         this.showView('chat-view');
-        // Inicializar chat cuando se abre la vista
-        setTimeout(() => this.initializeChatUI(), 100);
+        this.initializeChatUI();
     };
 
     /**

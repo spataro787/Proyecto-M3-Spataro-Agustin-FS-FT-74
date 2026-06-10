@@ -154,9 +154,6 @@ class ChatManager {
             return reply;
         } catch (error) {
             debugLog('Error en sendMessage:', error);
-            if (this.messages.length > 0 && this.messages[this.messages.length - 1].sender === 'user') {
-                this.messages.pop();
-            }
             throw error;
         } finally {
             this.isLoading = false;
