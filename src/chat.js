@@ -126,19 +126,32 @@ class ChatManager {
                 body: JSON.stringify(payload)
             });
 
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.error || `Error HTTP ${response.status}`);
+            const responseText = await response.text();
+            let data;
+
+            try {
+                data = responseText ? JSON.parse(responseText) : {};
+            } catch (parseError) {
+                debugLog('Error parseando JSON de respuesta:', parseError);
+                throw new Error('La respuesta del servidor no es JSON válido.');
             }
 
-            const data = await response.json();
             debugLog('Respuesta recibida:', data);
 
-            // Agregar respuesta de Gandalf al historial
-            const gandalfMsg = createMessage(data.reply, 'system');
+            if (!response.ok || data?.ok === false) {
+                const apiError = data?.error || data?.message || `Error HTTP ${response.status}`;
+                throw new Error(apiError);
+            }
+
+            const reply = typeof data.reply === 'string' ? data.reply.trim() : '';
+            if (!reply) {
+                throw new Error(data?.error || 'La respuesta del servidor está incompleta.');
+            }
+
+            const gandalfMsg = createMessage(reply, 'system');
             this.addMessage(gandalfMsg);
 
-            return data.reply;
+            return reply;
         } catch (error) {
             debugLog('Error en sendMessage:', error);
             if (this.messages.length > 0 && this.messages[this.messages.length - 1].sender === 'user') {

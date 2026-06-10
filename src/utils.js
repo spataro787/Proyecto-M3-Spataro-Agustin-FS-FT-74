@@ -89,9 +89,19 @@ export function escapeHtml(text) {
     if (!text || typeof text !== 'string') {
         return '';
     }
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+
+    if (typeof document !== 'undefined' && document.createElement) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
 }
 
 /**

@@ -2,11 +2,14 @@
   "name": "gandalf-ai-chat",
   "version": "1.0.0",
   "description": "Single Page Application - Chat with Gandalf el Gris, powered by Google Gemini AI",
+  "type": "module",
   "main": "src/index.html",
   "scripts": {
     "build": "node ./scripts/build.js",
     "dev": "npm run build && npx http-server dist -p 5173",
-    "start": "npm run dev"
+    "start": "npm run dev",
+    "test": "vitest run tests",
+    "test:watch": "vitest tests"
   },
   "keywords": [
     "spa",
@@ -18,7 +21,8 @@
   "author": "Your Name",
   "license": "MIT",
   "devDependencies": {
-    "http-server": "^14.1.1"
+    "http-server": "^14.1.1",
+    "vitest": "^1.5.3"
   },
   "dependencies": {}
 }
