@@ -5,6 +5,7 @@ Una Single Page Application (SPA) interactiva que permite conversar con una vers
 El proyecto está construido con HTML, CSS y JavaScript puro, con backend serverless en Vercel.
 
 ---
+http://192.168.100.142:8080/
 
 ## 🎯 Características
 
