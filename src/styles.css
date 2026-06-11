@@ -1,291 +1,81 @@
-/* =========================
-   GANDALF AI CHAT - STYLE
-   ========================= */
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Cinzel', serif;
-}
-
 body {
-  background: radial-gradient(circle at top, #1b1f2a, #0b0d12);
-  color: #e6e6e6;
-  min-height: 100vh;
-}
-
-/* =========================
-   HEADER
-   ========================= */
-
-.app-header {
-  background: rgba(20, 20, 30, 0.8);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-.header-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 25px;
-}
-
-.app-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: #d4af37;
-}
-
-/* NAV */
-
-.navigation {
-  display: flex;
-  gap: 10px;
-}
-
-.nav-link {
-  background: transparent;
-  border: 1px solid rgba(212, 175, 55, 0.4);
-  color: #d4af37;
-  padding: 8px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.nav-link:hover {
-  background: #d4af37;
-  color: #111;
-}
-
-/* =========================
-   GENERAL LAYOUT
-   ========================= */
-
-.app-main {
-  padding: 20px;
-}
-
-.view {
-  display: none;
-}
-
-.view.active {
-  display: block;
-}
-
-/* =========================
-   HOME HERO
-   ========================= */
-
-.hero {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 70vh;
-}
-
-.hero-card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 40px;
-  border-radius: 16px;
-  text-align: center;
-  max-width: 500px;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 0 30px rgba(0,0,0,0.5);
-}
-
-.avatar {
-  font-size: 60px;
-  margin-bottom: 15px;
-}
-
-.subtitle {
-  color: #bbb;
-  margin-top: 10px;
-}
-
-.description {
-  margin: 15px 0;
-  color: #999;
-}
-
-.primary-btn {
-  margin-top: 20px;
-  background: #d4af37;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: 0.3s;
-}
-
-.primary-btn:hover {
-  background: #f1c84c;
-}
-
-/* =========================
-   CHAT
-   ========================= */
-
-.chat-container {
-  max-width: 800px;
-  margin: auto;
-  background: rgba(255,255,255,0.03);
-  border-radius: 16px;
-  padding: 20px;
-  border: 1px solid rgba(255,255,255,0.1);
-}
-
-.chat-header {
-  text-align: center;
-  margin-bottom: 15px;
-}
-
-.chat-header h2 {
-  color: #d4af37;
-}
-
-.chat-header p {
-  font-style: italic;
-  color: #aaa;
-}
-
-/* MESSAGES */
-
-.chat-messages {
-  height: 400px;
-  overflow-y: auto;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-/* MESSAGE BUBBLES */
-
-.message {
-  padding: 10px 14px;
-  border-radius: 12px;
-  max-width: 70%;
-  word-wrap: break-word;
-}
-
-.user-message {
-  background: #d4af37;
-  color: #111;
-  align-self: flex-end;
-}
-
-.ai-message {
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.1);
-  align-self: flex-start;
-}
-
-/* FORM */
-
-.chat-form {
-  margin-top: 10px;
-}
-
-textarea {
-  width: 100%;
-  padding: 12px;
-  border-radius: 10px;
-  border: none;
-  resize: none;
-  outline: none;
-  background: rgba(255,255,255,0.05);
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #0b1a2e, #1b3a57);
   color: white;
 }
 
-.chat-actions {
+.app {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+}
+
+.header {
+  text-align: center;
+  padding: 20px;
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  color: gold;
+}
+
+.chat-container {
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  padding: 20px;
+  min-height: 500px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+
+.message {
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.user {
+  background: #2d6cdf;
+  text-align: right;
+}
+
+.gandalf {
+  background: #444;
+}
+
+.input-box {
+  display: flex;
+  gap: 10px;
+}
+
+textarea {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+button {
+  padding: 10px 20px;
+  background: gold;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.loading {
+  text-align: center;
+  color: #ccc;
   margin-top: 10px;
 }
 
-.send-btn {
-  background: #d4af37;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-.send-btn:hover {
-  background: #f1c84c;
-}
-
-/* LOADING */
-
-.loading {
-  font-size: 14px;
-  color: #aaa;
-}
-
-/* =========================
-   ABOUT
-   ========================= */
-
-.about-card {
-  max-width: 700px;
-  margin: auto;
-  padding: 30px;
-  background: rgba(255,255,255,0.05);
-  border-radius: 16px;
-  border: 1px solid rgba(255,255,255,0.1);
-}
-
-/* =========================
-   UTILITIES
-   ========================= */
-
 .hidden {
   display: none;
-}
-
-/* =========================
-   SCROLLBAR
-   ========================= */
-
-.chat-messages::-webkit-scrollbar {
-  width: 6px;
-}
-
-.chat-messages::-webkit-scrollbar-thumb {
-  background: #d4af37;
-  border-radius: 10px;
-}
-
-/* =========================
-   RESPONSIVE
-   ========================= */
-
-@media (max-width: 768px) {
-  .hero-card {
-    padding: 25px;
-  }
-
-  .chat-container {
-    margin: 10px;
-  }
-
-  .message {
-    max-width: 85%;
-  }
-
-  .header-container {
-    flex-direction: column;
-    gap: 10px;
-  }
 }
