@@ -4,34 +4,71 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Gandalf AI Chat</title>
-  <link rel="stylesheet" href="/styles.css"/>
+  <link rel="stylesheet" href="./styles.css"/>
 </head>
 
 <body>
-  <div class="app">
 
-    <header class="header">
-      <h1>🧙 Gandalf AI</h1>
-      <p>El sabio de la Tierra Media</p>
-    </header>
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="logo">🧙 Gandalf AI</div>
 
-    <main class="chat-container">
+    <nav>
+      <button onclick="showView('home')">Inicio</button>
+      <button onclick="showView('chat')">Chat</button>
+      <button onclick="showView('about')">Acerca</button>
+    </nav>
+  </header>
 
+  <!-- ================= HOME ================= -->
+  <section id="home" class="view active">
+    <div class="card">
+      <h1>Bienvenido a Gandalf AI</h1>
+      <p>Habla con el sabio de la Tierra Media.</p>
+      <p>Recibe respuestas misteriosas, sabias y mágicas 🧙‍♂️</p>
+
+      <button onclick="showView('chat')">
+        Ir al Chat
+      </button>
+    </div>
+  </section>
+
+  <!-- ================= CHAT ================= -->
+  <section id="chat" class="view hidden">
+    <div class="chat-box">
+
+      <!-- mensajes -->
       <div id="messages" class="messages"></div>
 
-      <form id="chat-form" class="input-box">
-        <textarea id="message-input" placeholder="Habla con Gandalf..."></textarea>
-        <button type="submit">Enviar</button>
-      </form>
-
-      <div id="loading" class="loading hidden">
-        Gandalf está pensando...
+      <!-- input -->
+      <div class="input-box">
+        <textarea id="input" placeholder="Escribe tu mensaje..."></textarea>
+        <button onclick="sendMessage()">Enviar</button>
       </div>
 
-    </main>
+    </div>
+  </section>
 
-  </div>
+  <!-- ================= ABOUT ================= -->
+  <section id="about" class="view hidden">
+    <div class="card">
+      <h1>Acerca del proyecto</h1>
 
-  <script type="module" src="/app.js"></script>
+      <p>
+        Este proyecto es una SPA (Single Page Application)
+        con inteligencia artificial integrada usando Gemini API.
+      </p>
+
+      <p>
+        El personaje principal es Gandalf el Gris, un asistente
+        inspirado en fantasía medieval.
+      </p>
+    </div>
+  </section>
+
+  <!-- scripts -->
+  <script src="./app.js"></script>
+  <script src="./chat.js"></script>
+
 </body>
 </html>

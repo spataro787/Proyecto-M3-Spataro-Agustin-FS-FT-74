@@ -1,41 +1,26 @@
-const messagesEl = document.getElementById("messages");
-const form = document.getElementById("chat-form");
-const input = document.getElementById("message-input");
-const loading = document.getElementById("loading");
+// app.js
 
-function addMessage(text, type) {
-  const div = document.createElement("div");
-  div.className = `message ${type}`;
-  div.textContent = text;
-  messagesEl.appendChild(div);
-  messagesEl.scrollTop = messagesEl.scrollHeight;
+function showView(viewId) {
+  // ocultar todas las vistas
+  document.querySelectorAll(".view").forEach(v => {
+    v.classList.remove("active");
+    v.classList.add("hidden");
+  });
+
+  // mostrar vista seleccionada
+  const target = document.getElementById(viewId);
+  if (target) {
+    target.classList.remove("hidden");
+    target.classList.add("active");
+  }
 }
 
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
+// exponer global para HTML
+window.showView = showView;
 
-  const message = input.value.trim();
-  if (!message) return;
+// iniciar app
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("Gandalf SPA iniciado 🧙");
 
-  addMessage(message, "user");
-  input.value = "";
-
-  loading.classList.remove("hidden");
-
-  try {
-    const res = await fetch("/api/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message })
-    });
-
-    const data = await res.json();
-
-    addMessage(data.reply || "Sin respuesta", "gandalf");
-
-  } catch (err) {
-    addMessage("Error con Gandalf", "gandalf");
-  }
-
-  loading.classList.add("hidden");
+  showView("home");
 });

@@ -1,87 +1,49 @@
-export default class ChatManager {
-  constructor() {
-    this.messages = [];
-    this.apiUrl = "/api/chat";
-  }
+const messages = document.getElementById("messages");
+const input = document.getElementById("input");
 
-  initializeChat() {
-    this.loadFromStorage();
-  }
+function addMessage(text, type) {
+  const div = document.createElement("div");
+  div.className = `message ${type}`;
+  div.textContent = text;
 
-  // 🧠 Obtener mensajes
-  getMessages() {
-    return this.messages;
-  }
+  messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
+}
 
-  // 💬 Agregar mensaje local
-  addMessage(text, sender = "user") {
-    const message = {
-      id: Date.now(),
-      text,
-      sender
-    };
+async function sendMessage() {
+  const text = input.value.trim();
+  if (!text) return;
 
-    this.messages.push(message);
-    return message;
-  }
+  addMessage(text, "user");
+  input.value = "";
 
-  // 💾 Guardar en memoria (opcional simple)
-  saveToStorage() {
-    // no obligatorio, pero útil
-    // sessionStorage.setItem("chat", JSON.stringify(this.messages));
-  }
+  // loading
+  const loading = document.createElement("div");
+  loading.className = "message bot";
+  loading.textContent = "Gandalf está escribiendo...";
+  messages.appendChild(loading);
 
-  loadFromStorage() {
-    // const data = sessionStorage.getItem("chat");
-    // if (data) this.messages = JSON.parse(data);
-  }
+  try {
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ message: text })
+    });
 
-  // 🤖 ENVIAR MENSAJE A LA API
-  async sendMessage(text) {
-    // 1. agregar mensaje del usuario
-    this.addMessage(text, "user");
+    const data = await res.json();
 
-    // 2. mostrar loading temporal (mensaje IA fake)
-    const loadingMessage = this.addMessage("Gandalf está pensando...", "ai");
+    // quitar loading
+    loading.remove();
 
-    try {
-      const response = await fetch(this.apiUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          message: text
-        })
-      });
+    addMessage(data.reply || "Sin respuesta de Gandalf", "bot");
 
-      const data = await response.json();
-
-      // 3. reemplazar loading por respuesta real
-      this.replaceMessage(
-        loadingMessage.id,
-        data.reply || "Las sombras no me permiten responder..."
-      );
-
-    } catch (error) {
-      this.replaceMessage(
-        loadingMessage.id,
-        "Los vientos de la magia fallaron... intenta nuevamente."
-      );
-    }
-  }
-
-  // 🔁 Reemplazar mensaje (clave para loading)
-  replaceMessage(id, newText) {
-    const msg = this.messages.find(m => m.id === id);
-    if (msg) {
-      msg.text = newText;
-      msg.sender = "ai";
-    }
-  }
-
-  // 🧹 Limpiar chat (opcional)
-  clearChat() {
-    this.messages = [];
+  } catch (err) {
+    loading.remove();
+    addMessage("Error al conectar con Gandalf", "bot");
   }
 }
+
+// global
+window.sendMessage = sendMessage;
