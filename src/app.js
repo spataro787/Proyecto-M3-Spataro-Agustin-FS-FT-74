@@ -6,12 +6,12 @@ import ChatManager from './chat.js';
 import { debugLog, escapeHtml } from './utils.js';
 
 const chatManager = new ChatManager();
-chatManager.initializeChat();
 
 class Router {
     constructor() {
         this.routes = new Map();
         this.currentRoute = '/home';
+
         this.setupRoutes();
         this.setupHistoryListener();
         this.setupNavigation();
@@ -29,18 +29,15 @@ class Router {
     }
 
     handleHomeRoute = () => {
-        debugLog('Navegando a /home');
         this.showView('home-view');
     };
 
     handleChatRoute = () => {
-        debugLog('Navegando a /chat');
         this.showView('chat-view');
-        this.initializeChatUI();
+        chatUI.renderMessages();
     };
 
     handleAboutRoute = () => {
-        debugLog('Navegando a /about');
         this.showView('about-view');
     };
 
@@ -58,17 +55,14 @@ class Router {
     }
 
     navigate(path) {
-        if (!this.routes.has(path)) {
-            debugLog(`Ruta no encontrada: ${path}`);
-            return;
-        }
+        if (!this.routes.has(path)) return;
 
         window.history.pushState({ path }, '', path);
         this.currentRoute = path;
+
         const handler = this.routes.get(path);
-        if (handler) {
-            handler();
-        }
+        handler?.();
+
         this.updateNavigation();
     }
 
@@ -83,84 +77,39 @@ class Router {
 
     setupHistoryListener() {
         window.addEventListener('popstate', (event) => {
-            debugLog('Evento popstate:', event.state);
             const path = event.state?.path || '/home';
             this.currentRoute = path;
-            if (this.routes.has(path)) {
-                const handler = this.routes.get(path);
-                if (handler) {
-                    handler();
-                }
-            }
+
+            const handler = this.routes.get(path);
+            handler?.();
+
             this.updateNavigation();
         });
     }
 
     setupNavigation() {
-        document.querySelectorAll('.nav-link, [data-route]').forEach(element => {
+        document.querySelectorAll('[data-route]').forEach(element => {
             element.addEventListener('click', (e) => {
-                if (element.closest('form')) return;
                 const route = element.getAttribute('data-route');
-                if (route) {
-                    e.preventDefault();
-                    this.navigate(route);
-                }
+                if (!route) return;
+
+                e.preventDefault();
+                this.navigate(route);
             });
         });
 
-        const currentPath = window.location.pathname;
-        if (currentPath === '/' || currentPath === '/index.html') {
-            this.navigate('/home');
-        } else if (this.routes.has(currentPath)) {
-            this.navigate(currentPath);
+        const path = window.location.pathname;
+
+        if (this.routes.has(path)) {
+            this.navigate(path);
         } else {
             this.navigate('/home');
-        }
-    }
-
-    initializeChatUI() {
-        this.renderMessages();
-    }
-
-    renderMessages() {
-        const messagesContainer = document.getElementById('messages-container');
-        if (!messagesContainer) return;
-
-        messagesContainer.innerHTML = '';
-        const messages = chatManager.getMessages();
-        messages.forEach((msg) => {
-            const messageEl = this.createMessageElement(msg);
-            messagesContainer.appendChild(messageEl);
-        });
-        this.scrollToBottom();
-    }
-
-    createMessageElement(message) {
-        const messageEl = document.createElement('div');
-        messageEl.className = `message ${message.sender}-message`;
-        messageEl.dataset.messageId = message.id;
-
-        const contentEl = document.createElement('div');
-        contentEl.className = 'message-content';
-        contentEl.textContent = message.text;
-
-        messageEl.appendChild(contentEl);
-        return messageEl;
-    }
-
-    scrollToBottom() {
-        const messagesContainer = document.getElementById('messages-container');
-        if (messagesContainer) {
-            setTimeout(() => {
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            }, 0);
         }
     }
 }
 
 class ChatUI {
-    constructor(router) {
-        this.router = router;
+    constructor() {
         this.setupChatForm();
     }
 
@@ -183,11 +132,9 @@ class ChatUI {
             loadingStatus?.classList.remove('hidden');
 
             try {
-                debugLog('Enviando mensaje:', message);
                 await chatManager.sendMessage(message);
-                this.router.renderMessages();
+                this.renderMessages();
             } catch (error) {
-                debugLog('Error al enviar mensaje:', error);
                 this.showError(error.message);
             } finally {
                 loadingStatus?.classList.add('hidden');
@@ -195,44 +142,82 @@ class ChatUI {
             }
         });
 
-        if (input) {
-            input.addEventListener('input', () => {
-                input.style.height = 'auto';
-                input.style.height = Math.min(input.scrollHeight, 120) + 'px';
-            });
+        input?.addEventListener('input', () => {
+            input.style.height = 'auto';
+            input.style.height = Math.min(input.scrollHeight, 120) + 'px';
+        });
 
-            input.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' && e.ctrlKey) {
-                    form.dispatchEvent(new Event('submit'));
-                }
-            });
-        }
+        input?.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                form.dispatchEvent(new Event('submit'));
+            }
+        });
+    }
+
+    renderMessages() {
+        const container = document.getElementById('messages-container');
+        if (!container) return;
+
+        container.innerHTML = '';
+
+        const messages = chatManager.getMessages();
+
+        messages.forEach(msg => {
+            const el = document.createElement('div');
+            el.className = `message ${msg.sender}-message`;
+
+            const content = document.createElement('div');
+            content.className = 'message-content';
+            content.textContent = msg.text;
+
+            el.appendChild(content);
+            container.appendChild(el);
+        });
+
+        this.scrollToBottom();
+    }
+
+    scrollToBottom() {
+        const container = document.getElementById('messages-container');
+        if (!container) return;
+
+        setTimeout(() => {
+            container.scrollTop = container.scrollHeight;
+        }, 0);
     }
 
     showError(message) {
-        const messagesContainer = document.getElementById('messages-container');
-        if (messagesContainer) {
-            const errorEl = document.createElement('div');
-            errorEl.className = 'message system-message';
-            errorEl.innerHTML = `
-                <div class="message-content">
-                    <p><strong>Error:</strong> ${escapeHtml(message)}</p>
-                    <p>Por favor, intenta de nuevo.</p>
-                </div>
-            `;
-            messagesContainer.appendChild(errorEl);
-            this.router.scrollToBottom();
-        }
+        const container = document.getElementById('messages-container');
+        if (!container) return;
+
+        const errorEl = document.createElement('div');
+        errorEl.className = 'message system-message';
+
+        errorEl.innerHTML = `
+            <div class="message-content">
+                <strong>Error:</strong> ${escapeHtml(message)}
+            </div>
+        `;
+
+        container.appendChild(errorEl);
+        this.scrollToBottom();
     }
 }
 
 function initializeApp() {
     debugLog('Inicializando aplicación...');
+
     const router = new Router();
-    new ChatUI(router);
-    router.renderMessages();
+    window.chatUI = new ChatUI(); // importante para acceso desde router
+
+    router.navigate('/home');
+
+    window.APP = {
+        router,
+        chatManager
+    };
+
     debugLog('Aplicación inicializada correctamente');
-    window.APP = { router, chatManager };
 }
 
 if (document.readyState === 'loading') {

@@ -4,67 +4,129 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gandalf AI Chat</title>
+
   <link rel="stylesheet" href="./styles.css" />
+
+  <!-- Fuente más elegante -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
   <div id="root">
+
+    <!-- HEADER -->
     <header class="app-header">
       <div class="header-container">
-        <div class="app-title">Gandalf AI Chat</div>
-        <nav class="navigation" role="navigation" aria-label="Navegación principal">
-          <button class="nav-link" type="button" data-route="/home">Inicio</button>
-          <button class="nav-link" type="button" data-route="/chat">Chat</button>
-          <button class="nav-link" type="button" data-route="/about">Acerca</button>
+
+        <div class="app-title">
+          🧙‍♂️ Gandalf AI Chat
+        </div>
+
+        <nav class="navigation" aria-label="Navegación principal">
+          <button class="nav-link" data-route="/home">Inicio</button>
+          <button class="nav-link" data-route="/chat">Chat</button>
+          <button class="nav-link" data-route="/about">Acerca</button>
         </nav>
+
       </div>
     </header>
 
+    <!-- MAIN -->
     <main class="app-main">
+
+      <!-- HOME -->
       <section id="home-view" class="view home-view active">
-        <div class="container hero">
-          <div class="hero-content">
-            <div class="character-avatar" aria-hidden="true">
-              <span class="avatar-icon">🧙‍♂️</span>
-            </div>
-            <h1 class="hero-title">Bienvenido al Chat de Gandalf</h1>
-            <p class="hero-subtitle">Habla con Gandalf el Gris y recibe consejos sabios de la Tierra Media.</p>
-            <p class="character-description">Conéctate con el sabio mago y pregunta sobre aventuras, valor y el destino de la Tierra Media.</p>
-            <button class="nav-link" type="button" data-route="/chat">Ir al Chat</button>
+        <div class="hero">
+
+          <div class="hero-card">
+
+            <div class="avatar">🧙‍♂️</div>
+
+            <h1>Bienvenido al Chat de Gandalf</h1>
+
+            <p class="subtitle">
+              Habla con el mago más sabio de la Tierra Media.
+            </p>
+
+            <p class="description">
+              Haz preguntas sobre destino, magia, aventuras y el camino que debes seguir.
+            </p>
+
+            <button class="primary-btn" data-route="/chat">
+              ✨ Comenzar conversación
+            </button>
+
           </div>
+
         </div>
       </section>
 
+      <!-- CHAT -->
       <section id="chat-view" class="view chat-view hidden">
-        <div class="container">
+
+        <div class="chat-container">
+
           <div class="chat-header">
-            <div class="chat-info">
-              <h2 class="chat-title">Gandalf el Gris</h2>
-              <p class="chat-status">Listo para conversar contigo</p>
-            </div>
+            <h2>🧙 Gandalf el Gris</h2>
+            <p>“Un mago nunca llega tarde…”</p>
           </div>
+
           <div id="messages-container" class="chat-messages"></div>
+
           <form id="chat-form" class="chat-form">
-            <textarea id="message-input" class="message-input" rows="2" placeholder="Escribe tu mensaje..." aria-label="Mensaje"></textarea>
+
+            <textarea
+              id="message-input"
+              placeholder="Escribe tu mensaje..."
+              rows="2"
+            ></textarea>
+
             <div class="chat-actions">
-              <span id="loading-status" class="chat-status-loading hidden"><span class="spinner"></span>Gandalf está escribiendo...</span>
-              <button class="nav-link" type="submit">Enviar</button>
+
+              <span id="loading-status" class="loading hidden">
+                ✨ Gandalf está pensando...
+              </span>
+
+              <button type="submit" class="send-btn">
+                Enviar
+              </button>
+
             </div>
+
           </form>
+
         </div>
+
       </section>
 
+      <!-- ABOUT -->
       <section id="about-view" class="view about-view hidden">
-        <div class="container">
-          <h2>Acerca de este proyecto</h2>
-          <p>Este SPA usa Vite y una API de chat para simular un asistente inspirado en Gandalf el Gris.</p>
-          <p>Selecciona la pestaña "Chat" para comenzar la conversación.</p>
+
+        <div class="about-card">
+
+          <h2>📖 Sobre este proyecto</h2>
+
+          <p>
+            Este proyecto es una SPA con integración de IA que simula un chat con Gandalf.
+          </p>
+
+          <p>
+            Incluye routing sin recarga, consumo de API y diseño responsive.
+          </p>
+
         </div>
+
       </section>
+
     </main>
 
+    <!-- FOOTER -->
     <footer class="app-footer">
-      <p>Gandalf AI Chat &copy; 2026</p>
+      <p>⚡ Gandalf AI Chat © 2026</p>
     </footer>
+
   </div>
 
   <script type="module" src="./app.js"></script>
