@@ -3,8 +3,7 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import ChatManager from '../src/chat.js';
-
+import ChatManager from '../assets/chat.js';
 describe('ChatManager', () => {
     let chatManager;
 

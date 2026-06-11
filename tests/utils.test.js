@@ -12,7 +12,7 @@ import {
     formatTime,
     escapeHtml,
     containsUrls
-} from '../src/utils.js';
+} from '../assets/utils.js';
 
 describe('Funciones de Utilidad', () => {
     describe('parseApiResponse', () => {
