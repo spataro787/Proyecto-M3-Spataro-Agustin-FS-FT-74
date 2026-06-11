@@ -118,14 +118,13 @@ class ChatManager {
             debugLog('Payload enviado:', payload);
 
             // Llamar a la Serverless Function
-            const response = await fetch(`${this.apiBaseUrl}/chat`, {
-                method: 'POST',
+            const response = await fetch("/api/chat", {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify(payload)
             });
-
             const responseText = await response.text();
             let data;
 
@@ -154,6 +153,9 @@ class ChatManager {
             return reply;
         } catch (error) {
             debugLog('Error en sendMessage:', error);
+            if (this.messages.length > 0 && this.messages[this.messages.length - 1].sender === 'user') {
+                this.messages.pop();
+            }
             throw error;
         } finally {
             this.isLoading = false;

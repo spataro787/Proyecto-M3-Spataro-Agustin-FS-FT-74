@@ -11,18 +11,13 @@
     "test": "vitest run tests",
     "test:watch": "vitest tests"
   },
-  "keywords": [
-    "spa",
-    "chat",
-    "ai",
-    "gemini",
-    "gandalf"
-  ],
-  "author": "Your Name",
-  "license": "MIT",
   "devDependencies": {
     "http-server": "^14.1.1",
+    "vercel": "54.11.1",
     "vitest": "^1.5.3"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0",
+    "node-fetch": "^3.3.2"
+  }
 }

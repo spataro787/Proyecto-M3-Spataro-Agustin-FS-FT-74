@@ -30,7 +30,7 @@ export default async function handler(req, res) {
     return res.status(500).json({
       ok: false,
       status: 500,
-      error: 'Configuración del servidor incompleta. API key no configurada.'
+      error: 'Missing GEMINI_API_KEY in Vercel'
     });
   }
 
@@ -173,8 +173,7 @@ export default async function handler(req, res) {
     return res.status(200).json({
       ok: true,
       status: 200,
-      reply,
-      raw: responseData
+      reply
     });
   } catch (error) {
     console.error('ERROR API:', error);
