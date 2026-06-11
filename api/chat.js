@@ -1,4 +1,5 @@
-export default async function handler(req, res) {
+async function handler(req, res) {
+  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
@@ -8,6 +9,7 @@ export default async function handler(req, res) {
     return res.status(204).end();
   }
 
+  // HEALTH CHECK
   if (req.method === 'GET') {
     return res.status(200).json({
       ok: true,
@@ -16,6 +18,7 @@ export default async function handler(req, res) {
     });
   }
 
+  // SOLO POST
   if (req.method !== 'POST') {
     return res.status(405).json({
       ok: false,
@@ -24,7 +27,9 @@ export default async function handler(req, res) {
     });
   }
 
+  // API KEY
   const apiKey = process.env.GEMINI_API_KEY;
+
   if (!apiKey) {
     console.error('Falta GEMINI_API_KEY en el entorno');
     return res.status(500).json({
@@ -34,15 +39,17 @@ export default async function handler(req, res) {
     });
   }
 
+  // BODY PARSE
   let body = req.body;
+
   if (typeof body === 'string') {
     try {
       body = JSON.parse(body);
-    } catch (parseError) {
+    } catch {
       return res.status(400).json({
         ok: false,
         status: 400,
-        error: 'JSON inválido en el body.'
+        error: 'JSON inválido en el body'
       });
     }
   }
@@ -51,164 +58,145 @@ export default async function handler(req, res) {
     return res.status(400).json({
       ok: false,
       status: 400,
-      error: 'Body inválido. Se requiere JSON con messages y systemPrompt.'
+      error: 'Body inválido'
     });
   }
 
   const messages = Array.isArray(body.messages) ? body.messages : [];
-  const systemPrompt = typeof body.systemPrompt === 'string' && body.systemPrompt.trim()
-    ? body.systemPrompt.trim()
-    : 'Eres un asistente útil y claro.';
+
+  const systemPrompt =
+    typeof body.systemPrompt === 'string' && body.systemPrompt.trim()
+      ? body.systemPrompt.trim()
+      : 'Eres un asistente útil y claro.';
 
   if (messages.length === 0) {
     return res.status(400).json({
       ok: false,
       status: 400,
-      error: 'messages es requerido y debe ser un array con al menos un mensaje.'
+      error: 'messages es requerido'
     });
   }
 
-  const promptMessages = [
+  // FORMATO GEMINI (CORRECTO)
+  const contents = [
     {
-      author: 'system',
-      content: [
-        {
-          type: 'text',
-          text: systemPrompt
-        }
-      ]
+      role: 'user',
+      parts: [{ text: systemPrompt }]
     },
-    ...messages
-      .map((msg) => {
-        const text = msg?.parts?.[0]?.text || msg?.text || '';
-        const role = msg?.role || msg?.sender || 'user';
-        const author = role === 'user'
-          ? 'user'
-          : role === 'system'
-            ? 'system'
-            : 'assistant';
+    ...messages.map((msg) => {
+      const text = msg?.parts?.[0]?.text || msg?.text || '';
+      const role =
+        msg?.role === 'assistant'
+          ? 'model'
+          : 'user';
 
-        if (!text || typeof text !== 'string') {
-          return null;
-        }
-
-        return {
-          author,
-          content: [
-            {
-              type: 'text',
-              text: text.trim()
-            }
-          ]
-        };
-      })
-      .filter(Boolean)
+      return {
+        role,
+        parts: [{ text }]
+      };
+    }).filter(m => m.parts[0].text)
   ];
 
-  if (promptMessages.length === 1) {
+  if (contents.length <= 1) {
     return res.status(400).json({
       ok: false,
       status: 400,
-      error: 'No se encontró texto válido en messages.'
+      error: 'No se encontró texto válido en messages'
     });
   }
 
   const geminiRequest = {
-    prompt: {
-      messages: promptMessages
-    },
-    temperature: 0.35,
-    topP: 0.95,
-    candidateCount: 1,
-    maxOutputTokens: 500
+    contents,
+    generationConfig: {
+      temperature: 0.35,
+      topP: 0.95,
+      maxOutputTokens: 500
+    }
   };
 
-  try {
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(geminiRequest)
-      }
-    );
+  // Try to use a model from env or a cached working model. If it fails
+  // with 404, attempt a small list of fallback model ids until one works.
+  const envModel = process.env.GEMINI_MODEL && process.env.GEMINI_MODEL.trim();
+  const candidateModels = [
+    envModel,
+    global.__GEMINI_CACHED_MODEL,
+    'gemini-1.5-flash',
+    'gemini-1.5',
+    'gemini-1.0',
+    'text-bison-001',
+    'chat-bison-001'
+  ].filter(Boolean);
 
-    const rawResponse = await response.text();
-    let responseData = {};
-
-    try {
-      responseData = rawResponse ? JSON.parse(rawResponse) : {};
-    } catch (parseError) {
-      console.error('ERROR PARSING GEMINI RESPONSE:', parseError, rawResponse);
-      return res.status(502).json({
-        ok: false,
-        status: 502,
-        error: 'La API de Gemini devolvió un JSON inválido.',
-        details: rawResponse
-      });
-    }
-
-    if (!response.ok) {
-      const errorMessage = responseData?.error?.message || responseData?.error || responseData?.message || `Gemini API devolvió ${response.status}`;
-      return res.status(response.status).json({
-        ok: false,
-        status: response.status,
-        error: errorMessage,
-        details: responseData
-      });
-    }
-
-    const reply = extractReply(responseData);
-    if (!reply) {
-      return res.status(502).json({
-        ok: false,
-        status: 502,
-        error: 'La API de Gemini devolvió una respuesta incompleta.',
-        details: responseData
-      });
-    }
-
-    return res.status(200).json({
-      ok: true,
-      status: 200,
-      reply
+  async function tryModel(modelId) {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelId}:generateContent?key=${apiKey}`;
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(geminiRequest)
     });
+    const data = await resp.json().catch(() => null);
+    return { resp, data };
+  }
+
+  try {
+    for (const modelId of candidateModels) {
+      if (!modelId) continue;
+      const { resp, data } = await tryModel(modelId);
+
+      if (!resp) continue;
+
+      // Authentication errors -> stop and report
+      if (resp.status === 401 || resp.status === 403) {
+        return res.status(401).json({
+          ok: false,
+          status: 401,
+          error: 'Autenticación con Gemini fallida. Verifica GEMINI_API_KEY en Vercel.'
+        });
+      }
+
+      // If model not found, try next candidate
+      if (resp.status === 404) {
+        continue;
+      }
+
+      if (!resp.ok) {
+        return res.status(resp.status).json({
+          ok: false,
+          status: resp.status,
+          error: data?.error?.message || 'Error en Gemini API',
+          details: data
+        });
+      }
+
+      const reply = extractReply(data);
+      if (!reply) {
+        return res.status(502).json({ ok: false, status: 502, error: 'Respuesta vacía de Gemini', details: data });
+      }
+
+      // Cache the working model for future requests (in-memory only)
+      try { global.__GEMINI_CACHED_MODEL = modelId; } catch (e) {}
+
+      return res.status(200).json({ ok: true, status: 200, reply, model: modelId });
+    }
+
+    // If we reach here, no candidate model worked
+    return res.status(502).json({
+      ok: false,
+      status: 502,
+      error: 'Ningún modelo disponible funcionó con tu clave. Revisa permisos del API key o configura `GEMINI_MODEL` en Vercel.',
+    });
+
   } catch (error) {
     console.error('ERROR API:', error);
-    return res.status(500).json({
-      ok: false,
-      status: 500,
-      error: error.message || 'Error interno del servidor'
-    });
+    return res.status(500).json({ ok: false, status: 500, error: error.message || 'Error interno del servidor' });
   }
 }
 
+export default handler;
+// EXTRACTOR CORRECTO
 function extractReply(data) {
-  if (!data || typeof data !== 'object') {
-    return '';
-  }
-
-  const candidate = data?.candidates?.[0] || data?.output?.candidates?.[0] || data?.output?.[0];
-  if (candidate) {
-    const textPart = candidate?.content?.find((item) => item?.type === 'text')?.text
-      || candidate?.content?.[0]?.text
-      || candidate?.message?.content?.find((item) => item?.type === 'text')?.text
-      || candidate?.message?.content?.[0]?.text;
-    if (textPart) {
-      return String(textPart).trim();
-    }
-  }
-
-  const outputText = data?.output?.[0]?.content?.find((item) => item?.type === 'text')?.text;
-  if (outputText) {
-    return String(outputText).trim();
-  }
-
-  if (typeof data?.text === 'string') {
-    return data.text.trim();
-  }
-
-  return '';
+  return (
+    data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+    ''
+  ).trim();
 }
