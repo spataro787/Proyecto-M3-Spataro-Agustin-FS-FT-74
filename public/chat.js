@@ -40,9 +40,9 @@ async function sendMessage() {
     addMessage(data.reply || "Sin respuesta de Gandalf", "bot");
 
   } catch (err) {
-    loading.remove();
-    addMessage("Error al conectar con Gandalf", "bot");
-  }
+  console.error("ERROR CHAT:", err);
+  addMessage("ERROR: " + err.message, "bot");
+}
 }
 
 // global
