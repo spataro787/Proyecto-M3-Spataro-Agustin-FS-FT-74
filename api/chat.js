@@ -1,41 +1,44 @@
 export default async function handler(req, res) {
-  // CORS (bien, lo dejás así)
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST,OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-  // Preflight
   if (req.method === "OPTIONS") {
     return res.status(204).end();
   }
 
-  // Solo POST
   if (req.method !== "POST") {
-    return res.status(405).json({
-      error: "Método no permitido"
-    });
+    return res.status(405).json({ error: "Método no permitido" });
   }
 
   try {
     const { message } = req.body || {};
 
     if (!message) {
-      return res.status(400).json({
-        error: "Falta el mensaje"
-      });
+      return res.status(400).json({ error: "Falta el mensaje" });
     }
 
     const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
-      return res.status(500).json({
-        error: "Falta la API KEY de Gemini"
-      });
+      return res.status(500).json({ error: "Falta la API KEY de Gemini" });
     }
 
+    // 🧙‍♂️ PROMPT MEJORADO (clave para que NO sea genérico)
     const prompt = `
-Eres Gandalf el Gris, un mago sabio de la Tierra Media.
-Responde con sabiduría, calma y tono medieval.
+Eres Gandalf el Gris de El Señor de los Anillos.
+
+PERSONALIDAD:
+- Eres un mago sabio, antiguo y misterioso
+- Hablas con tono medieval y poético
+- No repites frases
+- Das respuestas distintas cada vez
+- Aconsejas como un mentor
+
+IMPORTANTE:
+- No digas que eres una IA
+- No seas genérico
+- Mantén el personaje siempre
 
 Usuario: ${message}
 `;
@@ -53,7 +56,13 @@ Usuario: ${message}
               role: "user",
               parts: [{ text: prompt }]
             }
-          ]
+          ],
+          // 🔥 ESTO ES LO QUE LE DA VIDA
+          generationConfig: {
+            temperature: 0.9,
+            topP: 0.95,
+            maxOutputTokens: 300
+          }
         })
       }
     );
@@ -71,9 +80,7 @@ Usuario: ${message}
       data?.candidates?.[0]?.content?.parts?.[0]?.text ??
       "Las nieblas de Mordor impiden mi respuesta...";
 
-    return res.status(200).json({
-      reply
-    });
+    return res.status(200).json({ reply });
 
   } catch (error) {
     console.error("API ERROR:", error);
