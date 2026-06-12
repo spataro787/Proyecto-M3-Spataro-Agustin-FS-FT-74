@@ -2,14 +2,19 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gandalf AI Chat</title>
 
-<link rel="stylesheet" href="./assets/styles.css">
-  <!-- fallback por si CSS no carga -->
+  <link rel="stylesheet" href="/assets/styles.css">
+
   <style>
-    .view { display: none; }
-    .view.active { display: block; }
+    .view {
+      display: none;
+    }
+
+    .view.active {
+      display: block;
+    }
   </style>
 </head>
 
@@ -43,8 +48,14 @@
       <div id="messages" class="messages"></div>
 
       <div class="input-box">
-        <textarea id="input" placeholder="Escribe tu mensaje..."></textarea>
-        <button onclick="sendMessage()">Enviar</button>
+        <textarea
+          id="input"
+          placeholder="Escribe tu mensaje..."
+        ></textarea>
+
+        <button onclick="sendMessage()">
+          Enviar
+        </button>
       </div>
     </div>
   </section>
@@ -53,16 +64,24 @@
   <section id="about" class="view">
     <div class="card">
       <h1>Acerca del proyecto</h1>
-      <p> Este proyecto es una SPA (Single Page Application) con inteligencia
-  artificial utilizando Gemini API..</p>
-  <p>El personaje principal es Gandalf el Gris, un mago asistente inspirado
-  en la fantasía medieval, diseñado para responder preguntas y mantener
-  conversaciones con una temática relacionada al universo fantástico.</p>
+
+      <p>
+        Este proyecto es una SPA (Single Page Application)
+        con inteligencia artificial utilizando Gemini API.
+      </p>
+
+      <p>
+        El personaje principal es Gandalf el Gris, un mago
+        asistente inspirado en la fantasía medieval,
+        diseñado para responder preguntas y mantener
+        conversaciones relacionadas con la Tierra Media.
+      </p>
     </div>
   </section>
-<script src="./assets/utils.js"></script>
-<script src="./assets/app.js"></script>
-<script src="./assets/chat.js"></script>
+
+  <script src="/assets/utils.js"></script>
+  <script src="/assets/app.js"></script>
+  <script src="/assets/chat.js"></script>
 
 </body>
 </html>
