@@ -10,6 +10,7 @@
 
 <body>
 
+  <!-- NAVBAR -->
   <header class="navbar">
     <div class="logo">🧙 Gandalf AI</div>
 
@@ -20,6 +21,7 @@
     </nav>
   </header>
 
+  <!-- HOME -->
   <section id="home" class="view active">
     <div class="card">
       <h1>Bienvenido a Gandalf AI</h1>
@@ -31,23 +33,26 @@
     </div>
   </section>
 
+  <!-- CHAT -->
   <section id="chat" class="view">
     <div class="chat-box">
-      <div id="messages" class="messages"></div>
 
+      <!-- MENSAJES -->
+      <div id="chat-box" class="messages"></div>
+
+      <!-- INPUT -->
       <div class="input-box">
-        <textarea
-          id="input"
-          placeholder="Escribe tu mensaje..."
-        ></textarea>
+        <textarea id="input" placeholder="Escribe tu mensaje..."></textarea>
 
-        <button onclick="sendMessage()">
+        <button id="sendBtn">
           Enviar
         </button>
       </div>
+
     </div>
   </section>
 
+  <!-- ABOUT -->
   <section id="about" class="view">
     <div class="card">
       <h1>Acerca del proyecto</h1>
@@ -60,15 +65,13 @@
       <p>
         El personaje principal es Gandalf el Gris,
         un mago asistente inspirado en la fantasía medieval,
-        diseñado para responder preguntas y mantener
-        conversaciones relacionadas con la Tierra Media.
+        diseñado para responder preguntas.
       </p>
     </div>
   </section>
 
-  <script src="/assets/utils.js"></script>
+  <!-- SCRIPTS -->
   <script src="/assets/app.js"></script>
-  <script src="/assets/chat.js"></script>
 
 </body>
 </html>
