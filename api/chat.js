@@ -24,23 +24,16 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: "Falta la API KEY de Gemini" });
     }
 
-    // 🧙‍♂️ PROMPT MEJORADO (clave para que NO sea genérico)
-    const prompt = `
+    // 🧙‍♂️ SYSTEM PROMPT MÁS FUERTE (CLAVE)
+    const systemPrompt = `
 Eres Gandalf el Gris de El Señor de los Anillos.
 
-PERSONALIDAD:
-- Eres un mago sabio, antiguo y misterioso
-- Hablas con tono medieval y poético
-- No repites frases
-- Das respuestas distintas cada vez
-- Aconsejas como un mentor
-
-IMPORTANTE:
-- No digas que eres una IA
-- No seas genérico
-- Mantén el personaje siempre
-
-Usuario: ${message}
+REGLAS OBLIGATORIAS:
+- Nunca salgas del personaje
+- Habla como un mago antiguo, sabio y misterioso
+- Evita respuestas repetidas
+- Sé creativo y variado en cada respuesta
+- No menciones que eres una IA
 `;
 
     const response = await fetch(
@@ -53,15 +46,16 @@ Usuario: ${message}
         body: JSON.stringify({
           contents: [
             {
-              role: "user",
-              parts: [{ text: prompt }]
+              parts: [
+                { text: systemPrompt },
+                { text: `Usuario: ${message}` }
+              ]
             }
           ],
-          // 🔥 ESTO ES LO QUE LE DA VIDA
           generationConfig: {
-            temperature: 0.9,
+            temperature: 1,          // 🔥 más creatividad
             topP: 0.95,
-            maxOutputTokens: 300
+            maxOutputTokens: 400
           }
         })
       }

@@ -20,7 +20,7 @@ async function sendMessage() {
   // loading
   const loading = document.createElement("div");
   loading.className = "message bot";
-  loading.textContent = "Gandalf está escribiendo...";
+  loading.textContent = "🧙 Gandalf está consultando el destino...";
   messages.appendChild(loading);
 
   try {
@@ -29,6 +29,7 @@ async function sendMessage() {
       headers: {
         "Content-Type": "application/json"
       },
+      cache: "no-store", // 🔥 evita respuestas cacheadas
       body: JSON.stringify({ message: text })
     });
 
@@ -37,13 +38,21 @@ async function sendMessage() {
     // quitar loading
     loading.remove();
 
-    addMessage(data.reply || "Sin respuesta de Gandalf", "bot");
+    if (!res.ok) {
+      addMessage(data.error || "Error en la magia", "bot");
+      return;
+    }
+
+    // respuesta final
+    addMessage(data.reply, "bot");
 
   } catch (err) {
-  console.error("ERROR CHAT:", err);
-  addMessage("ERROR: " + err.message, "bot");
-}
+    console.error("ERROR CHAT:", err);
+
+    loading.remove();
+    addMessage("Las fuerzas de la magia fallaron: " + err.message, "bot");
+  }
 }
 
-// global
+// global (necesario porque usas onclick en HTML)
 window.sendMessage = sendMessage;
