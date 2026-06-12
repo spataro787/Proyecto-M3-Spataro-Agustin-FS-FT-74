@@ -3,17 +3,17 @@
   "version": "1.0.0",
   "description": "Single Page Application - Chat with Gandalf el Gris, powered by Google Gemini AI",
   "type": "module",
-  "main": "src/index.html",
+  "main": "index.html",
   "scripts": {
-    "build": "node ./scripts/build.js",
-    "dev": "npm run build && npx http-server dist -p 5173",
-    "start": "npm run dev",
+    "build": "echo Build OK",
+    "dev": "npx http-server . -p 5173",
+    "start": "npx http-server . -p 3000",
     "test": "vitest run tests",
-    "test:watch": "vitest tests"
+    "test:watch": "vitest"
   },
   "devDependencies": {
     "http-server": "^14.1.1",
-    "vercel": "54.11.1",
+    "vercel": "^54.11.1",
     "vitest": "^1.5.3"
   },
   "dependencies": {
