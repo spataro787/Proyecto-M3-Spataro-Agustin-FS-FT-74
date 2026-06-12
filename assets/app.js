@@ -16,6 +16,7 @@ function showView(viewId) {
 
 window.showView = showView;
 
+
 /* =========================
    CHAT GANDALF AI
 ========================= */
@@ -31,12 +32,20 @@ async function sendMessage(message) {
     });
 
     const data = await res.json();
+
+    if (!res.ok) {
+      console.error("API ERROR:", data);
+      return data.error || "Las fuerzas de la magia fallaron...";
+    }
+
     return data.reply;
+
   } catch (error) {
     console.error("Error chat:", error);
     return "Las fuerzas de la magia fallaron...";
   }
 }
+
 
 /* =========================
    UI CHAT
@@ -45,6 +54,8 @@ async function sendMessage(message) {
 function addMessage(role, text) {
   const chatBox = document.getElementById("chat-box");
 
+  if (!chatBox) return;
+
   const msg = document.createElement("div");
   msg.classList.add("message", role);
   msg.textContent = text;
@@ -52,6 +63,7 @@ function addMessage(role, text) {
   chatBox.appendChild(msg);
   chatBox.scrollTop = chatBox.scrollHeight;
 }
+
 
 /* =========================
    EVENTO SEND
@@ -74,14 +86,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     input.value = "";
 
-    // loader opcional
-    addMessage("gandalf", "...");
-    
+    // loader
+    addMessage("gandalf", "🧙‍♂️ ...");
+
     const reply = await sendMessage(message);
 
-    // borrar "..."
+    // borrar loader
     const chatBox = document.getElementById("chat-box");
-    chatBox.lastChild.remove();
+    const last = chatBox?.lastChild;
+    if (last) last.remove();
 
     // respuesta Gandalf
     addMessage("gandalf", reply);
