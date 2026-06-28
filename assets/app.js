@@ -1,102 +1,101 @@
 /* =========================
-   SPA NAVIGATION
+   PERSONAJE ACTUAL
+========================= */
+
+window.currentCharacter = "gandalf";
+
+const characterData = {
+
+  gandalf: {
+    name: "🧙 Gandalf",
+    description: "El sabio mago de la Tierra Media.",
+    avatar: "/images/gandalf.png"
+  },
+
+  yoda: {
+    name: "🟢 Yoda",
+    description: "Maestro Jedi lleno de sabiduría.",
+    avatar: "/images/yoda.png"
+  },
+
+  sherlock: {
+    name: "🕵️ Sherlock Holmes",
+    description: "Detective experto en deducción.",
+    avatar: "/images/sherlock.png"
+  }
+
+};
+
+/* =========================
+   CAMBIAR PERSONAJE
+========================= */
+
+function selectCharacter(character) {
+
+  window.currentCharacter = character;
+
+  const avatar = document.getElementById("characterAvatar");
+  const name = document.getElementById("characterName");
+  const description = document.getElementById("characterDescription");
+
+  if (!characterData[character]) return;
+
+  if (avatar) {
+    avatar.src = characterData[character].avatar;
+    avatar.alt = characterData[character].name;
+  }
+
+  if (name) {
+    name.textContent = characterData[character].name;
+  }
+
+  if (description) {
+    description.textContent =
+      characterData[character].description;
+  }
+
+  showView("chat");
+
+}
+
+/* =========================
+   NAVEGACIÓN SPA
 ========================= */
 
 function showView(viewId) {
-  document.querySelectorAll(".view").forEach(v => {
-    v.classList.remove("active");
+
+  const views = document.querySelectorAll(".view");
+
+  views.forEach(view => {
+
+    view.classList.remove("active");
+
   });
 
   const target = document.getElementById(viewId);
 
   if (target) {
+
     target.classList.add("active");
+
   }
+
 }
 
-window.showView = showView;
-
-
 /* =========================
-   CHAT GANDALF AI
-========================= */
-
-async function sendMessage(message) {
-  try {
-    const res = await fetch("/api/chat", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ message })
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      console.error("API ERROR:", data);
-      return data.error || "Las fuerzas de la magia fallaron...";
-    }
-
-    return data.reply;
-
-  } catch (error) {
-    console.error("Error chat:", error);
-    return "Las fuerzas de la magia fallaron...";
-  }
-}
-
-
-/* =========================
-   UI CHAT
-========================= */
-
-function addMessage(role, text) {
-  const chatBox = document.getElementById("chat-box");
-
-  if (!chatBox) return;
-
-  const msg = document.createElement("div");
-  msg.classList.add("message", role);
-  msg.textContent = text;
-
-  chatBox.appendChild(msg);
-  chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-
-/* =========================
-   EVENTO SEND
+   INICIALIZACIÓN
 ========================= */
 
 document.addEventListener("DOMContentLoaded", () => {
+
   showView("home");
 
-  const input = document.getElementById("input");
-  const button = document.getElementById("sendBtn");
-
-  if (!input || !button) return;
-
-  button.addEventListener("click", async () => {
-    const message = input.value.trim();
-    if (!message) return;
-
-    // mensaje usuario
-    addMessage("user", message);
-
-    input.value = "";
-
-    // loader
-    addMessage("gandalf", "🧙‍♂️ ...");
-
-    const reply = await sendMessage(message);
-
-    // borrar loader
-    const chatBox = document.getElementById("chat-box");
-    const last = chatBox?.lastChild;
-    if (last) last.remove();
-
-    // respuesta Gandalf
-    addMessage("gandalf", reply);
-  });
 });
+
+/* =========================
+   EXPORTAR A WINDOW
+========================= */
+
+window.showView = showView;
+window.selectCharacter = selectCharacter;
+window.characterData = characterData;

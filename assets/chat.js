@@ -1,58 +1,182 @@
-const messages = document.getElementById("messages");
+/* =========================
+   ELEMENTOS
+========================= */
+
+const chatBox = document.getElementById("chat-box");
 const input = document.getElementById("input");
+const sendBtn = document.getElementById("sendBtn");
 
-function addMessage(text, type) {
-  const div = document.createElement("div");
-  div.className = `message ${type}`;
-  div.textContent = text;
+/* =========================
+   AGREGAR MENSAJE
+========================= */
 
-  messages.appendChild(div);
-  messages.scrollTop = messages.scrollHeight;
+function addMessage(text, role) {
+
+  if (!chatBox) return;
+
+  const message = document.createElement("div");
+
+  message.classList.add("message");
+
+  if (role === "user") {
+
+    message.classList.add("user");
+
+  } else {
+
+    message.classList.add(window.currentCharacter);
+
+  }
+
+  message.textContent = text;
+
+  chatBox.appendChild(message);
+
+  chatBox.scrollTop = chatBox.scrollHeight;
+
 }
+
+/* =========================
+   ENVIAR MENSAJE
+========================= */
 
 async function sendMessage() {
-  const text = input.value.trim();
-  if (!text) return;
 
-  addMessage(text, "user");
+  if (!input) return;
+
+  const message = input.value.trim();
+
+  if (!message) return;
+
+  addMessage(message, "user");
+
   input.value = "";
 
-  // loading
-  const loading = document.createElement("div");
-  loading.className = "message bot";
-  loading.textContent = "🧙 Gandalf está consultando el destino...";
-  messages.appendChild(loading);
+  const loadingTexts = {
+
+    gandalf: "🧙 Gandalf está consultando los antiguos pergaminos...",
+
+    yoda: "🟢 Paciencia debes tener... pensando estoy...",
+
+    sherlock: "🕵️ Sherlock está analizando las pistas..."
+
+  };
+
+  addMessage(
+
+    loadingTexts[window.currentCharacter] ||
+
+    "⌛ Pensando...",
+
+    "bot"
+
+  );
 
   try {
-    const res = await fetch("/api/chat", {
+
+    const response = await fetch("/api/functions", {
+
       method: "POST",
+
       headers: {
+
         "Content-Type": "application/json"
+
       },
-      cache: "no-store", // 🔥 evita respuestas cacheadas
-      body: JSON.stringify({ message: text })
+
+      body: JSON.stringify({
+
+        message: message,
+
+        character: window.currentCharacter
+
+      })
+
     });
 
-    const data = await res.json();
+    const data = await response.json();
 
-    // quitar loading
-    loading.remove();
+    /* eliminar loader */
 
-    if (!res.ok) {
-      addMessage(data.error || "Error en la magia", "bot");
-      return;
+    if (chatBox.lastChild) {
+
+      chatBox.removeChild(chatBox.lastChild);
+
     }
 
-    // respuesta final
+    if (!response.ok) {
+
+      addMessage(
+
+        data.error || "Error al consultar el personaje.",
+
+        "bot"
+
+      );
+
+      return;
+
+    }
+
     addMessage(data.reply, "bot");
 
-  } catch (err) {
-    console.error("ERROR CHAT:", err);
-
-    loading.remove();
-    addMessage("Las fuerzas de la magia fallaron: " + err.message, "bot");
   }
+
+  catch (error) {
+
+    console.error(error);
+
+    if (chatBox.lastChild) {
+
+      chatBox.removeChild(chatBox.lastChild);
+
+    }
+
+    addMessage(
+
+      "⚠️ Ha ocurrido un error inesperado.",
+
+      "bot"
+
+    );
+
+  }
+
 }
 
-// global (necesario porque usas onclick en HTML)
+/* =========================
+   EVENTOS
+========================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  if (sendBtn) {
+
+    sendBtn.addEventListener("click", sendMessage);
+
+  }
+
+  if (input) {
+
+    input.addEventListener("keydown", function (event) {
+
+      if (event.key === "Enter" && !event.shiftKey) {
+
+        event.preventDefault();
+
+        sendMessage();
+
+      }
+
+    });
+
+  }
+
+});
+
+/* =========================
+   GLOBAL
+========================= */
+
 window.sendMessage = sendMessage;
+window.addMessage = addMessage;

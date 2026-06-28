@@ -1,73 +1,83 @@
-# 🧙 Gandalf AI Chat - SPA
+# 🧙 Fantasy AI Chat - SPA
 
-Una Single Page Application (SPA) interactiva que permite conversar con una versión de IA de Gandalf el Gris utilizando Google Gemini AI.
+Una Single Page Application (SPA) interactiva que permite conversar con distintos personajes de fantasía mediante inteligencia artificial utilizando Google Gemini AI.
 
-El proyecto está construido con HTML, CSS y JavaScript puro, con backend serverless en Vercel.
+El proyecto está construido con HTML, CSS y JavaScript puro, con backend serverless desplegado en Vercel.
 
 ---
+
+## 🔗 Demo en vivo
+
 https://proyecto-m3-spataro-agustin-fs-ft-7.vercel.app/
+
+---
 
 ## 🎯 Características
 
 - SPA sin recargas de página
 - Navegación entre vistas (Inicio / Chat / Acerca)
-- Chat con IA (Gandalf el Gris)
+- Selección de personajes de fantasía
+- Chat con inteligencia artificial
 - Integración con Google Gemini API
-- API Key protegida en backend (Vercel Functions)
-- Diseño responsive mobile-first
-- Interfaz de chat estilo burbujas
-- System prompt con personalidad definida
-- Estética inspirada en fantasía (Tierra Media)
+- Backend serverless en Vercel (API protegida)
+- Interfaz tipo chat con burbujas de mensaje
+- Diseño responsive (mobile-first)
+- Estética inspirada en fantasía medieval
+
+---
+
+## 🧙 Personajes
+
+El sistema permite interactuar con distintos personajes:
+
+- 🧙 Gandalf: sabio, misterioso y calmado
+- 🟢 Yoda: maestro Jedi, habla de forma particular y reflexiva
+- 🕵️ Sherlock Holmes: lógico, analítico y deductivo
+
+Cada personaje tiene una personalidad definida mediante system prompt.
 
 ---
 
 ## 📁 Estructura del proyecto
-
 ai-chat-spa/
 ├── api/
-│   └── chat.js
+│ └── chat.js
+├── images/
+│ ├── gandalf.png
+│ ├── yoda.png
+│ └── sherlock.png
+├── assets/
+│ ├── app.js
+│ ├── chat.js
+│ └── styles.css
 ├── index.html
-├── app.js
-├── chat.js
-├── styles.css
 ├── package.json
 └── README.md
 
----
-
-## 🚀 Funcionalidad
-
-### SPA (Routing manual)
-
-- /home → Inicio
-- /chat → Chat con Gandalf
-- /about → Información del proyecto
 
 ---
 
-### 💬 Chat con IA
+## 🚀 Funcionamiento
 
-Flujo:
+### Flujo del chat
 
-Frontend → /api/chat → Vercel Function → Gemini API → Respuesta
+Frontend → API /api/chat → Vercel Function → Google Gemini API → Respuesta → Frontend
 
 ---
 
-## 🧙 Personaje: Gandalf el Gris
+## 💬 Uso de la aplicación
 
-Gandalf responde:
-
-- Sabio
-- Misterioso
-- En español
-- Máximo 4 líneas
-- Siempre en personaje
+1. Ingresar a la página
+2. Seleccionar un personaje
+3. Ir al chat
+4. Escribir un mensaje
+5. Recibir respuesta del personaje con su personalidad
 
 ---
 
 ## 🔐 Seguridad
 
-La API Key se almacena en Vercel como variable de entorno:
+La API Key se almacena como variable de entorno en Vercel:
 
 GEMINI_API_KEY=tu_api_key
 
@@ -75,7 +85,7 @@ Nunca se expone en el frontend.
 
 ---
 
-## 📱 Responsive Design
+## 📱 Diseño responsive
 
 - Mobile: 320px+
 - Tablet: 768px+
@@ -83,22 +93,22 @@ Nunca se expone en el frontend.
 
 ---
 
-## 🛠️ Tecnologías
+## 🛠️ Tecnologías utilizadas
 
 - HTML5
 - CSS3
-- JavaScript Vanilla
+- JavaScript (Vanilla)
 - Vercel Serverless Functions
 - Google Gemini API
 
 ---
 
-## ⚙️ Instalación local
+## ⚙️ Instalación y ejecución local
 
 npm install
 npm run dev
 
-Abrir:
+Luego abrir:
 
 http://localhost:5173
 
@@ -106,7 +116,7 @@ http://localhost:5173
 
 ## 🚀 Deploy en Vercel
 
-1. Subir proyecto a GitHub
+1. Subir el proyecto a GitHub
 2. Importar en Vercel
 3. Agregar variable de entorno:
 
@@ -118,7 +128,7 @@ GEMINI_API_KEY
 
 ## 🧪 API
 
-POST /api/chat
+### POST /api/chat
 
 Request:
 
@@ -129,20 +139,19 @@ Request:
 Response:
 
 {
-  "reply": "Respuesta de Gandalf..."
+  "reply": "Respuesta del personaje..."
 }
 
 ---
 
-## 🐛 Errores comunes
+## 🐛 Problemas comunes
 
-- Error al conectar → falta API key
-- 404 → api/chat.js mal ubicado
-- 500 → error en Gemini API
+- Error 404: archivo api/chat.js mal ubicado
+- Error 500: problema con Gemini API o API key
+- Chat no responde: revisar método POST en frontend
 
 ---
 
 ## 👨‍💻 Autor
 
-Agustin Spataro
-
+Agustín Spataro
