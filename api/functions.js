@@ -116,12 +116,13 @@ No rompas el personaje.
 
     const data = await response.json();
 
-    if (!response.ok) {
-      console.error(data);
-      return res.status(500).json({
-        error: "Error al consultar Gemini."
-      });
-    }
+   if (!response.ok) {
+  console.error("ERROR GEMINI:", JSON.stringify(data, null, 2));
+
+  return res.status(500).json({
+    error: data.error?.message || "Error al consultar Gemini."
+  });
+}
 
     const reply =
       data?.candidates?.[0]?.content?.parts?.[0]?.text;
