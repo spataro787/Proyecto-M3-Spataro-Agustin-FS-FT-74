@@ -23,25 +23,17 @@ export default async function handler(req, res) {
     const { message, character } = req.body;
 
     if (!message || message.trim() === "") {
-
       return res.status(400).json({
-
         error: "Debes escribir un mensaje."
-
       });
-
     }
 
     const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
-
       return res.status(500).json({
-
         error: "No se encontró GEMINI_API_KEY."
-
       });
-
     }
 
     /* =========================
@@ -49,7 +41,6 @@ export default async function handler(req, res) {
     ========================= */
 
     const prompts = {
-
       gandalf: `
 Eres Gandalf el Gris.
 
@@ -87,7 +78,6 @@ Explica tus conclusiones paso a paso.
 
 No rompas el personaje.
 `
-
     };
 
     const systemPrompt =
@@ -98,105 +88,61 @@ No rompas el personaje.
     ========================= */
 
     const response = await fetch(
-
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-
       {
-
         method: "POST",
-
         headers: {
-
           "Content-Type": "application/json"
-
         },
-
         body: JSON.stringify({
-
           contents: [
-
             {
-
               role: "user",
-
               parts: [
-
                 {
-
-                  text:
-                    systemPrompt +
-                    "\n\nUsuario: " +
-                    message
-
+                  text: systemPrompt + "\n\nUsuario: " + message
                 }
-
               ]
-
             }
-
           ],
-
           generationConfig: {
-
             temperature: 0.9,
-
             topP: 0.95,
-
             maxOutputTokens: 400
-
           }
-
         })
-
       }
-
     );
 
     const data = await response.json();
 
     if (!response.ok) {
-
       console.error(data);
-
       return res.status(500).json({
-
         error: "Error al consultar Gemini."
-
       });
-
     }
 
     const reply =
       data?.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (!reply) {
+      console.error("Respuesta vacía:", data);
 
       return res.status(500).json({
-
         error: "El personaje no respondió."
-
       });
-
     }
 
     return res.status(200).json({
-
       reply
-
     });
 
-  }
-
-  catch (error) {
-
+  } catch (error) {
     console.error(error);
 
     return res.status(500).json({
-
       error: "Error interno del servidor."
-
     });
-
   }
-
 }

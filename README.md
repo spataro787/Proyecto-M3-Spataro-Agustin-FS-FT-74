@@ -41,7 +41,7 @@ Cada personaje tiene una personalidad definida mediante system prompt.
 ## 📁 Estructura del proyecto
 ai-chat-spa/
 ├── api/
-│ └── chat.js
+│ └──functions.js
 ├── images/
 │ ├── gandalf.png
 │ ├── yoda.png
