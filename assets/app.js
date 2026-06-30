@@ -4,26 +4,28 @@
 
 window.currentCharacter = "gandalf";
 
-const characterData = {
+/* =========================
+   DATOS PERSONAJES
+========================= */
 
+const characterData = {
   gandalf: {
     name: "Gandalf",
     description: "El sabio mago de la Tierra Media.",
-    avatar: "/images/gandalf.png"
+    avatar: "/images/Gandalf.png"
   },
 
   yoda: {
-    name: " Yoda",
+    name: "Yoda",
     description: "Maestro Jedi lleno de sabiduría.",
     avatar: "/images/yoda.png"
   },
 
   sherlock: {
-    name: " Sherlock Holmes",
+    name: "Sherlock Holmes",
     description: "Detective experto en deducción.",
-    avatar: "/images/sherlock.png"
+    avatar: "/images/Sherlock.png"
   }
-
 };
 
 /* =========================
@@ -32,14 +34,15 @@ const characterData = {
 
 function selectCharacter(character) {
 
+  if (!characterData[character]) return;
+
   window.currentCharacter = character;
 
   const avatar = document.getElementById("characterAvatar");
   const name = document.getElementById("characterName");
   const description = document.getElementById("characterDescription");
 
-  if (!characterData[character]) return;
-
+  // actualizar UI del personaje activo
   if (avatar) {
     avatar.src = characterData[character].avatar;
     avatar.alt = characterData[character].name;
@@ -50,16 +53,19 @@ function selectCharacter(character) {
   }
 
   if (description) {
-    description.textContent =
-      characterData[character].description;
+    description.textContent = characterData[character].description;
   }
 
+  // ir a chat
   showView("chat");
 
+  // 🔥 IMPORTANTE: opcional (limpiar chat al cambiar personaje)
+  // messages = [];
+  // renderMessages();
 }
 
 /* =========================
-   NAVEGACIÓN SPA
+   SPA NAVIGATION
 ========================= */
 
 function showView(viewId) {
@@ -67,19 +73,14 @@ function showView(viewId) {
   const views = document.querySelectorAll(".view");
 
   views.forEach(view => {
-
     view.classList.remove("active");
-
   });
 
   const target = document.getElementById(viewId);
 
   if (target) {
-
     target.classList.add("active");
-
   }
-
 }
 
 /* =========================
@@ -87,13 +88,11 @@ function showView(viewId) {
 ========================= */
 
 document.addEventListener("DOMContentLoaded", () => {
-
   showView("home");
-
 });
 
 /* =========================
-   EXPORTAR A WINDOW
+   EXPORT GLOBAL
 ========================= */
 
 window.showView = showView;

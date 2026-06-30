@@ -1,4 +1,10 @@
 /* =========================
+   CONFIG
+========================= */
+
+window.USE_AI = true; // false = sin IA
+
+/* =========================
    ELEMENTOS
 ========================= */
 
@@ -7,141 +13,202 @@ const input = document.getElementById("input");
 const sendBtn = document.getElementById("sendBtn");
 
 /* =========================
-   AGREGAR MENSAJE
+   MEMORIA
 ========================= */
 
-function addMessage(text, role) {
+let messages = [];
 
-  if (!chatBox) return;
+/* =========================
+   RENDER
+========================= */
 
-  const message = document.createElement("div");
+function renderMessages() {
+    if (!chatBox) return;
 
-  message.classList.add("message");
+    chatBox.innerHTML = "";
 
-  if (role === "user") {
+    messages.forEach(msg => {
+        const div = document.createElement("div");
 
-    message.classList.add("user");
+        div.classList.add("message");
 
-  } else {
+        if (msg.role === "user") {
+            div.classList.add("user");
+        } else {
+            div.classList.add(msg.role);
+        }
 
-    message.classList.add(window.currentCharacter);
+        div.textContent = msg.text;
 
-  }
+        chatBox.appendChild(div);
+    });
 
-  message.textContent = text;
-
-  chatBox.appendChild(message);
-
-  chatBox.scrollTop = chatBox.scrollHeight;
-
+    scrollToBottom();
 }
 
 /* =========================
-   ENVIAR MENSAJE
+   SCROLL
+========================= */
+
+function scrollToBottom() {
+    if (!chatBox) return;
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+/* =========================
+   ADD MESSAGE
+========================= */
+
+function addMessage(text, role) {
+    messages.push({
+        text,
+        role,
+        time: Date.now()
+    });
+
+    renderMessages();
+}
+
+/* =========================
+   LOADING
+========================= */
+
+function addLoadingMessage() {
+    const loadingTexts = {
+        gandalf: "Gandalf está consultando los antiguos pergaminos...",
+        yoda: "Paciencia debes tener... pensando estoy...",
+        sherlock: "Sherlock está analizando las pistas..."
+    };
+
+    messages.push({
+        text: loadingTexts[window.currentCharacter] || "⌛ Pensando...",
+        role: "bot",
+        loading: true
+    });
+
+    renderMessages();
+}
+
+/* =========================
+   REMOVE LOADING
+========================= */
+
+function removeLoadingMessage() {
+    messages = messages.filter(m => !m.loading);
+}
+
+/* =========================
+   RESPUESTAS SIN IA
+========================= */
+
+function fakeResponse() {
+
+    const responses = {
+        gandalf: [
+            "Un poder antiguo observa tus palabras...",
+            "El destino aún no está escrito...",
+            "La sabiduría llega con el tiempo.",
+            "He visto caminos oscuros y luminosos."
+        ],
+
+        yoda: [
+            "Difícil de ver el futuro es...",
+            "Paciencia debes tener.",
+            "Dentro de ti está la respuesta.",
+            "El miedo es el camino al lado oscuro."
+        ],
+
+        sherlock: [
+            "Interesante… los hechos son claros.",
+            "La deducción es evidente.",
+            "Cada detalle cambia la conclusión.",
+            "Elemental."
+        ]
+    };
+
+    const list = responses[window.currentCharacter] || [
+        "No tengo una respuesta clara..."
+    ];
+
+    return list[Math.floor(Math.random() * list.length)];
+}
+
+/* =========================
+   SEND MESSAGE
 ========================= */
 
 async function sendMessage() {
 
-  if (!input) return;
+    if (!input) return;
 
-  const message = input.value.trim();
+    const message = input.value.trim();
+    if (!message) return;
 
-  if (!message) return;
+    // usuario
+    addMessage(message, "user");
 
-  addMessage(message, "user");
+    input.value = "";
 
-  input.value = "";
+    // loader
+    addLoadingMessage();
 
-  const loadingTexts = {
+    /* =========================
+       MODO SIN IA
+    ========================= */
 
-    gandalf: " Gandalf está consultando los antiguos pergaminos...",
+    if (!window.USE_AI) {
 
-    yoda: " Paciencia debes tener... pensando estoy...",
+        setTimeout(() => {
+            removeLoadingMessage();
+            addMessage(fakeResponse(), window.currentCharacter);
+        }, 700);
 
-    sherlock: " Sherlock está analizando las pistas..."
-
-  };
-
-  addMessage(
-
-    loadingTexts[window.currentCharacter] ||
-
-    "⌛ Pensando...",
-
-    "bot"
-
-  );
-
-  try {
-
-    const response = await fetch("/api/functions", {
-
-      method: "POST",
-
-      headers: {
-
-        "Content-Type": "application/json"
-
-      },
-
-      body: JSON.stringify({
-
-        message: message,
-
-        character: window.currentCharacter
-
-      })
-
-    });
-
-    const data = await response.json();
-
-    /* eliminar loader */
-
-    if (chatBox.lastChild) {
-
-      chatBox.removeChild(chatBox.lastChild);
-
+        return;
     }
 
-    if (!response.ok) {
+    /* =========================
+       MODO IA
+    ========================= */
 
-      addMessage(
+    try {
 
-        data.error || "Error al consultar el personaje.",
+        const response = await fetch("/api/functions", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                message,
+                character: window.currentCharacter,
+                useAI: window.USE_AI
+            })
+        });
 
-        "bot"
+        const data = await response.json();
 
-      );
+        removeLoadingMessage();
 
-      return;
+        if (!response.ok) {
+            addMessage(
+                data.error || "Error al consultar el personaje.",
+                "bot"
+            );
+            return;
+        }
 
+        addMessage(data.reply, window.currentCharacter);
+
+    } catch (error) {
+
+        console.error(error);
+
+        removeLoadingMessage();
+
+        addMessage(
+            "⚠️ no molestar en este momento, estoy meditando algunas respuestas.",
+            "bot"
+        );
     }
-
-    addMessage(data.reply, "bot");
-
-  }
-
-  catch (error) {
-
-    console.error(error);
-
-    if (chatBox.lastChild) {
-
-      chatBox.removeChild(chatBox.lastChild);
-
-    }
-
-    addMessage(
-
-      "⚠️ Ha ocurrido un error inesperado.",
-
-      "bot"
-
-    );
-
-  }
-
 }
 
 /* =========================
@@ -150,27 +217,18 @@ async function sendMessage() {
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  if (sendBtn) {
+    if (sendBtn) {
+        sendBtn.addEventListener("click", sendMessage);
+    }
 
-    sendBtn.addEventListener("click", sendMessage);
-
-  }
-
-  if (input) {
-
-    input.addEventListener("keydown", function (event) {
-
-      if (event.key === "Enter" && !event.shiftKey) {
-
-        event.preventDefault();
-
-        sendMessage();
-
-      }
-
-    });
-
-  }
+    if (input) {
+        input.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
+    }
 
 });
 
