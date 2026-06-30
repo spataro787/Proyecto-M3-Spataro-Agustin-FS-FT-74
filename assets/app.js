@@ -7,21 +7,21 @@ window.currentCharacter = "gandalf";
 const characterData = {
 
   gandalf: {
-    name: "🧙 Gandalf",
+    name: "Gandalf",
     description: "El sabio mago de la Tierra Media.",
-    avatar: "/images/gandalf.png"
+    avatar: "/images/personajes/gandalf.png"
   },
 
   yoda: {
-    name: "🟢 Yoda",
+    name: " Yoda",
     description: "Maestro Jedi lleno de sabiduría.",
-    avatar: "/images/yoda.png"
+    avatar: "/images/personajes/yoda.png"
   },
 
   sherlock: {
-    name: "🕵️ Sherlock Holmes",
+    name: " Sherlock Holmes",
     description: "Detective experto en deducción.",
-    avatar: "/images/sherlock.png"
+    avatar: "/images/personajes/sherlock.png"
   }
 
 };

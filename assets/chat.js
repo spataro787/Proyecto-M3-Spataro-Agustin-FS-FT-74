@@ -54,11 +54,11 @@ async function sendMessage() {
 
   const loadingTexts = {
 
-    gandalf: "🧙 Gandalf está consultando los antiguos pergaminos...",
+    gandalf: " Gandalf está consultando los antiguos pergaminos...",
 
-    yoda: "🟢 Paciencia debes tener... pensando estoy...",
+    yoda: " Paciencia debes tener... pensando estoy...",
 
-    sherlock: "🕵️ Sherlock está analizando las pistas..."
+    sherlock: " Sherlock está analizando las pistas..."
 
   };
 
