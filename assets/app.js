@@ -9,19 +9,19 @@ const characterData = {
   gandalf: {
     name: "Gandalf",
     description: "El sabio mago de la Tierra Media.",
-    avatar: "/images/personajes/gandalf.png"
+    avatar: "/images/gandalf.png"
   },
 
   yoda: {
     name: " Yoda",
     description: "Maestro Jedi lleno de sabiduría.",
-    avatar: "/images/personajes/yoda.png"
+    avatar: "/images/yoda.png"
   },
 
   sherlock: {
     name: " Sherlock Holmes",
     description: "Detective experto en deducción.",
-    avatar: "/images/personajes/sherlock.png"
+    avatar: "/images/sherlock.png"
   }
 
 };
