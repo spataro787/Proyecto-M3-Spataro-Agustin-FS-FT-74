@@ -300,18 +300,30 @@ async function sendMessage() {
         }
 
         addMessage(data.reply, window.currentCharacter);
+} catch (error) {
 
-    } catch (error) {
+    console.error(error);
 
-        console.error(error);
+    removeLoadingMessage();
 
-        removeLoadingMessage();
+    const errorResponses = [
+        "⚠️ El oráculo está en silencio… intenta más tarde.",
+        "⚠️ Mis pensamientos se han perdido en el vacío.",
+        "⚠️ Estoy meditando… pero algo interrumpió mi concentración.",
+        "⚠️ Las fuerzas mágicas no responden en este momento.",
+        "⚠️ No puedo responder ahora… el destino está inestable.",
+        "⚠️ La conexión con los antiguos saberes se ha perdido.",
+        "⚠️ Algo bloquea mi visión del futuro.",
+        "⚠️ Las sombras interfieren con mi respuesta.",
+        "⚠️ El conocimiento está fuera de alcance ahora mismo.",
+        "⚠️ Mi mente está nublada… vuelve a intentarlo luego."
+    ];
 
-        addMessage(
-            "⚠️ No me molestes en este momento, estoy meditando algunas respuestas.",
-            "bot"
-        );
-    }
+    const random =
+        errorResponses[Math.floor(Math.random() * errorResponses.length)];
+
+    addMessage(random, "bot");
+}
 }
 
 /* =========================
