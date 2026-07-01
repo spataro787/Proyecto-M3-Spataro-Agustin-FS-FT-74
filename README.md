@@ -1,157 +1,299 @@
 # 🧙 Fantasy AI Chat - SPA
 
-Una Single Page Application (SPA) interactiva que permite conversar con distintos personajes de fantasía mediante inteligencia artificial utilizando Google Gemini AI.
+Una **Single Page Application (SPA)** interactiva que permite conversar con personajes icónicos de la fantasía y la ficción mediante inteligencia artificial utilizando **Google Gemini AI**.
 
-El proyecto está construido con HTML, CSS y JavaScript puro, con backend serverless desplegado en Vercel.
-
----
-
-## 🔗 Demo en vivo
-
-https://proyecto-m3-spataro-agustin-fs-ft-7.vercel.app/
+El proyecto fue desarrollado con **HTML, CSS y JavaScript puro**, implementando un backend **Serverless** desplegado en **Vercel** para proteger la API Key y gestionar las peticiones a la IA.
 
 ---
 
-## 🎯 Características
+## 🌐 Demo en vivo
 
-- SPA sin recargas de página
-- Navegación entre vistas (Inicio / Chat / Acerca)
-- Selección de personajes de fantasía
-- Chat con inteligencia artificial
-- Integración con Google Gemini API
-- Backend serverless en Vercel (API protegida)
-- Interfaz tipo chat con burbujas de mensaje
-- Diseño responsive (mobile-first)
-- Estética inspirada en fantasía medieval
+🔗 https://proyecto-m3-spataro-agustin-fs-ft-7.vercel.app/
 
 ---
 
-## 🧙 Personajes
+## ✨ Características principales
 
-El sistema permite interactuar con distintos personajes:
-
-- 🧙 Gandalf: sabio, misterioso y calmado
-- 🟢 Yoda: maestro Jedi, habla de forma particular y reflexiva
-- 🕵️ Sherlock Holmes: lógico, analítico y deductivo
-
-Cada personaje tiene una personalidad definida mediante system prompt.
+* ⚡ Single Page Application sin recargas de página.
+* 🧭 Navegación dinámica mediante JavaScript y History API.
+* 🧙 Selección entre múltiples personajes con personalidades únicas.
+* 🤖 Integración con Google Gemini AI.
+* 💬 Interfaz de chat moderna con burbujas diferenciadas.
+* ⌛ Indicador visual mientras la IA genera respuestas.
+* 💾 Persistencia del historial mediante Local Storage.
+* 🗑️ Opción para borrar el historial de cada personaje.
+* 📱 Diseño responsive adaptado a móviles, tablets y escritorio.
+* 🏰 Estética inspirada en la fantasía medieval y épica.
 
 ---
 
-## 📁 Estructura del proyecto
-ai-chat-spa/
+# 🧙 Personajes disponibles
+
+## 🧙 Gandalf el Gris
+
+El sabio mago de la Tierra Media.
+
+* Respuestas tranquilas y reflexivas.
+* Uso de metáforas y enseñanzas.
+* Tono místico y ancestral.
+
+---
+
+## 🟢 Maestro Yoda
+
+Legendario Maestro Jedi y guardián de la Fuerza.
+
+* Habla con la estructura característica de Yoda.
+* Respuestas llenas de paciencia y sabiduría.
+* Consejos orientados al equilibrio interior.
+
+---
+
+## 🕵️ Sherlock Holmes
+
+El detective más brillante de la ficción.
+
+* Pensamiento lógico y deductivo.
+* Explicaciones paso a paso.
+* Observación y análisis de cada detalle.
+
+---
+
+Cada personaje posee un **System Prompt independiente**, permitiendo mantener una personalidad consistente durante toda la conversación.
+
+---
+
+# 📁 Estructura del proyecto
+
+```text
+Fantasy-AI-Chat/
+
 ├── api/
-│ └──functions.js
-├── images/
-│ ├── gandalf.png
-│ ├── yoda.png
-│ └── sherlock.png
+│   └── functions.js
+
 ├── assets/
-│ ├── app.js
-│ ├── chat.js
-│ └── styles.css
+│   ├── app.js
+│   ├── chat.js
+│   ├── utils.js
+│   └── styles.css
+
+├── images/
+│   ├── Captura de pantalla
+│   ├── Caputa de pantalla
+│   ├── Captura de pantalla 
+    ├──  Gandalf.png
+    ├──  Sherlock.png
+    └── Yoda.png
+  
+
+├── tests/
+│   ├── chat.test.js
+│   ├── utils.test.js
+│   └── app.test.js
+
 ├── index.html
 ├── package.json
+├── vite.config.js
+├── vitest.config.js.bak
 └── README.md
+```
 
+
+# 🔄 Funcionamiento de la aplicación
+
+```text
+Usuario
+   ↓
+Frontend (SPA)
+   ↓
+/api/functions
+   ↓
+Vercel Serverless Function
+   ↓
+Google Gemini API
+   ↓
+Respuesta del personaje
+   ↓
+Frontend
+```
 
 ---
 
-## 🚀 Funcionamiento
+# 💬 Uso de la aplicación
 
-### Flujo del chat
-
-Frontend → API /api/chat → Vercel Function → Google Gemini API → Respuesta → Frontend
-
----
-
-## 💬 Uso de la aplicación
-
-1. Ingresar a la página
-2. Seleccionar un personaje
-3. Ir al chat
-4. Escribir un mensaje
-5. Recibir respuesta del personaje con su personalidad
+1. Ingresar al sitio web.
+2. Elegir uno de los personajes disponibles.
+3. Acceder a la vista de chat.
+4. Escribir un mensaje.
+5. Recibir una respuesta generada por IA respetando la personalidad seleccionada.
 
 ---
 
-## 🔐 Seguridad
+# 💾 Persistencia del historial
 
-La API Key se almacena como variable de entorno en Vercel:
+La aplicación almacena automáticamente las conversaciones utilizando **Local Storage**.
 
+Características:
+
+* Historial independiente para cada personaje.
+* Recuperación automática al recargar la página.
+* Indicador visual de historial guardado.
+* Botón para eliminar conversaciones anteriores.
+
+---
+
+# 🔐 Seguridad
+
+La clave de acceso a Gemini nunca se expone en el frontend.
+
+Se almacena como variable de entorno en Vercel:
+
+```env
 GEMINI_API_KEY=tu_api_key
+```
 
-Nunca se expone en el frontend.
-
----
-
-## 📱 Diseño responsive
-
-- Mobile: 320px+
-- Tablet: 768px+
-- Desktop: 1024px+
+Esto garantiza que las solicitudes a la IA sean procesadas únicamente desde el backend.
 
 ---
 
-## 🛠️ Tecnologías utilizadas
+# 📱 Diseño Responsive
 
-- HTML5
-- CSS3
-- JavaScript (Vanilla)
-- Vercel Serverless Functions
-- Google Gemini API
+La interfaz fue desarrollada siguiendo una estrategia **Mobile First**.
+
+Breakpoints utilizados:
+
+| Dispositivo | Resolución |
+| ----------- | ---------- |
+| 📱 Mobile   | 320px+     |
+| 📲 Tablet   | 768px+     |
+| 🖥️ Desktop | 1024px+    |
 
 ---
 
-## ⚙️ Instalación y ejecución local
+# 🛠️ Tecnologías utilizadas
 
+* HTML5
+* CSS3
+* JavaScript (Vanilla JS)
+* Google Gemini API
+* Vercel Serverless Functions
+* Local Storage API
+* Vite
+* Vitest
+* Git & GitHub
+
+
+# ⚙️ Instalación y ejecución local
+
+Clonar el repositorio:
+
+```bash
+git clone https://github.com/spataro787/Proyecto-M3-Spataro-Agustin-FS-FT-74.git
+```
+
+Instalar dependencias:
+
+```bash
 npm install
+```
+
+Ejecutar el entorno local:
+
+```bash
 npm run dev
+```
 
-Luego abrir:
+Abrir en el navegador:
 
+```text
 http://localhost:5173
+```
 
 ---
 
-## 🚀 Deploy en Vercel
+# 🚀 Deploy en Vercel
 
-1. Subir el proyecto a GitHub
-2. Importar en Vercel
-3. Agregar variable de entorno:
+1. Subir el proyecto a GitHub.
+2. Importar el repositorio en Vercel.
+3. Configurar la variable de entorno:
 
+```text
 GEMINI_API_KEY
+```
 
-4. Deploy automático
+4. Realizar el deploy automático.
 
 ---
 
-## 🧪 API
+# 🧪 API
 
-### POST /api/chat
+## POST `/api/functions`
 
-Request:
+### Request
 
+```json
 {
-  "message": "Hola Gandalf"
+  "message": "Hola Gandalf",
+  "character": "gandalf"
 }
+```
 
-Response:
+### Response
 
+```json
 {
-  "reply": "Respuesta del personaje..."
+  "reply": "Un mago nunca llega tarde, ni pronto. Llega exactamente cuando se lo propone."
 }
+```
 
 ---
 
-## 🐛 Problemas comunes
+# 🐛 Problemas comunes
 
-- Error 404: archivo api/chat.js mal ubicado
-- Error 500: problema con Gemini API o API key
-- Chat no responde: revisar método POST en frontend
+### Error 404
+
+Verificar la ubicación del archivo:
+
+```text
+/api/functions.js
+```
 
 ---
 
-## 👨‍💻 Autor
+### Error 500
 
-Agustín Spataro
+Comprobar:
+
+* La variable `GEMINI_API_KEY`.
+* El estado de la API de Gemini.
+* Los logs de Vercel.
+
+---
+
+### El chat no responde
+
+Verificar:
+
+* Método `POST`.
+* Ruta `/api/functions`.
+* Conexión a Internet.
+* Configuración de variables de entorno.
+
+---
+
+# 👨‍💻 Autor
+
+**Agustín Spataro**
+
+Proyecto académico desarrollado para practicar:
+
+* Single Page Applications (SPA)
+* JavaScript Vanilla
+* Integración con APIs externas
+* Backend Serverless
+* Diseño Responsive
+* Desarrollo Full Stack
+
+---
+
+> *"Todo lo que tenemos que decidir es qué hacer con el tiempo que se nos ha dado."* — Gandalf

@@ -10,7 +10,6 @@
 
 body{
     font-family:'Cinzel', serif;
-
     background:radial-gradient(circle at top,#05060a,#000000 60%,#05060a);
     color:#e8e6e3;
     min-height:100vh;
@@ -90,8 +89,9 @@ body{
 
     box-shadow:0 0 35px rgba(0,0,0,.8);
 }
-
 .card h1{
+    font-family:'MedievalSharp', cursive;
+
     color:#d4af37;
     margin-bottom:25px;
     text-align:center;
@@ -106,7 +106,7 @@ body{
 }
 
 /* =========================
-   PERSONAJES (RETRATO GRANDE)
+   PERSONAJES
 ========================= */
 
 .character-cards{
@@ -132,7 +132,6 @@ body{
     box-shadow:0 0 25px rgba(212,175,55,.15);
 }
 
-/* FOTO PRINCIPAL GRANDE */
 .character img{
     width:180px;
     height:220px;
@@ -146,11 +145,12 @@ body{
 }
 
 .character h3{
+    font-family:'MedievalSharp', cursive;
+
     color:#d4af37;
     font-size:1.3rem;
     letter-spacing:1px;
 }
-
 /* =========================
    CHAT
 ========================= */
@@ -169,7 +169,10 @@ body{
     overflow:hidden;
 }
 
-/* personaje activo */
+/* =========================
+   PERSONAJE ACTIVO
+========================= */
+
 .character-info{
     display:flex;
     align-items:center;
@@ -191,6 +194,47 @@ body{
     color:#d4af37;
 }
 
+/* =========================
+   HISTORIAL
+========================= */
+
+.history-panel{
+    margin-left:auto;
+
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:8px;
+}
+
+#historyStatus{
+    color:#d4af37;
+    font-size:14px;
+    font-style:italic;
+}
+
+#clearHistoryBtn{
+    background:#3b1a1a;
+    color:#f0d6d6;
+
+    border:1px solid #7a3030;
+    border-radius:6px;
+
+    padding:8px 14px;
+
+    cursor:pointer;
+    transition:.3s;
+
+    font-size:14px;
+    font-weight:bold;
+}
+
+#clearHistoryBtn:hover{
+    background:#5a2020;
+    transform:translateY(-2px);
+
+    box-shadow:0 0 12px rgba(180,50,50,.4);
+}
 /* =========================
    MENSAJES
 ========================= */
@@ -214,6 +258,7 @@ body{
 }
 
 /* usuario */
+
 .message.user{
     background:#5a4520;
     color:#0e0e0e;
@@ -221,6 +266,7 @@ body{
 }
 
 /* personajes */
+
 .message.gandalf{
     background:#1b1b1b;
 }
@@ -234,7 +280,7 @@ body{
 }
 
 /* =========================
-   ✨ EFECTO MAGIA
+   EFECTO MAGIA
 ========================= */
 
 .message.magic{
@@ -243,14 +289,17 @@ body{
 }
 
 @keyframes magicPop{
+
     0%{
         opacity:0;
         transform:scale(0.8) translateY(10px);
         filter:blur(4px);
     }
+
     50%{
         filter:blur(1px);
     }
+
     100%{
         opacity:1;
         transform:scale(1);
@@ -268,9 +317,20 @@ body{
 }
 
 @keyframes spark{
-    0%{opacity:0; transform:scale(0);}
-    50%{opacity:1;}
-    100%{opacity:0; transform:scale(1.5);}
+
+    0%{
+        opacity:0;
+        transform:scale(0);
+    }
+
+    50%{
+        opacity:1;
+    }
+
+    100%{
+        opacity:0;
+        transform:scale(1.5);
+    }
 }
 
 /* =========================
@@ -335,7 +395,7 @@ body{
 }
 
 /* =========================
-   RESPONSIVE
+   RESPONSIVE TABLET Y MÓVIL
 ========================= */
 
 @media(max-width:768px){
@@ -355,11 +415,86 @@ body{
         text-align:center;
     }
 
+    .history-panel{
+        margin-left:0;
+        align-items:center;
+    }
+
     .input-box{
         flex-direction:column;
     }
 
     .input-box button{
         width:100%;
+    }
+}
+
+/* =========================
+   TABLETS
+========================= */
+
+@media (min-width:769px) and (max-width:1024px){
+
+    .card{
+        margin:30px;
+        padding:30px;
+    }
+
+    .chat-box{
+        margin:20px;
+        height:82vh;
+    }
+
+    .character img{
+        width:160px;
+        height:200px;
+    }
+
+    .message{
+        max-width:90%;
+    }
+}
+
+/* =========================
+   MÓVILES PEQUEÑOS
+========================= */
+
+@media (max-width:480px){
+
+    .logo{
+        font-size:26px;
+    }
+
+    .navbar{
+        padding:15px;
+    }
+
+    .navbar nav{
+        flex-wrap:wrap;
+        justify-content:center;
+    }
+
+    .card{
+        margin:15px;
+        padding:20px;
+    }
+
+    .card h1{
+        font-size:1.5rem;
+    }
+
+    .character img{
+        width:140px;
+        height:180px;
+    }
+
+    .message{
+        max-width:95%;
+        font-size:14px;
+    }
+
+    .input-box textarea{
+        height:60px;
+        font-size:14px;
     }
 }

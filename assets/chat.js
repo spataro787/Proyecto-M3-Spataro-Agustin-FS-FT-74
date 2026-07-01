@@ -17,6 +17,100 @@ const sendBtn = document.getElementById("sendBtn");
 ========================= */
 
 let messages = [];
+/* =========================
+   LOCAL STORAGE
+========================= */
+
+function getStorageKey() {
+    return `history_${window.currentCharacter}`;
+}
+
+function saveMessages() {
+
+    localStorage.setItem(
+        getStorageKey(),
+        JSON.stringify(messages)
+    );
+
+    updateHistoryIndicator();
+}
+
+function loadMessages() {
+
+    const saved =
+        localStorage.getItem(
+            getStorageKey()
+        );
+
+    if (!saved) {
+        messages = [];
+        renderMessages();
+        updateHistoryIndicator();
+        return;
+    }
+
+    try {
+
+        messages = JSON.parse(saved);
+
+        renderMessages();
+        updateHistoryIndicator();
+
+    }catch (error) {
+
+    console.error(
+        "Error cargando historial:",
+        error
+    );
+
+    messages = [];
+
+    renderMessages();
+
+    updateHistoryIndicator();
+}
+}
+function clearHistory() {
+
+    if (
+        !confirm(
+            "¿Borrar el historial de este personaje?"
+        )
+    ) {
+        return;
+    }
+
+    messages = [];
+
+    localStorage.removeItem(
+        getStorageKey()
+    );
+
+    renderMessages();
+
+    updateHistoryIndicator();
+}
+
+function updateHistoryIndicator() {
+
+    const indicator =
+        document.getElementById(
+            "historyStatus"
+        );
+
+    if (!indicator) return;
+
+    if (messages.length > 0) {
+
+        indicator.textContent =
+            "💾 Historial guardado";
+
+    } else {
+
+        indicator.textContent =
+            "Sin historial guardado";
+    }
+}
 
 /* =========================
    RENDER
@@ -60,24 +154,26 @@ function scrollToBottom() {
 ========================= */
 
 function addMessage(text, role) {
+
     messages.push({
         text,
         role,
         time: Date.now()
     });
 
+    saveMessages();
+
     renderMessages();
 }
-
 /* =========================
    LOADING
 ========================= */
 
 function addLoadingMessage() {
     const loadingTexts = {
-        gandalf: "Gandalf está consultando los antiguos pergaminos...",
+        gandalf: "Estoy consultando los antiguos pergaminos...",
         yoda: "Paciencia debes tener... pensando estoy...",
-        sherlock: "Sherlock está analizando las pistas..."
+        sherlock: "Estoy analizando las pistas..."
     };
 
     messages.push({
@@ -92,9 +188,16 @@ function addLoadingMessage() {
 /* =========================
    REMOVE LOADING
 ========================= */
-
 function removeLoadingMessage() {
-    messages = messages.filter(m => !m.loading);
+
+    messages =
+        messages.filter(
+            m => !m.loading
+        );
+
+    saveMessages();
+
+    renderMessages();
 }
 
 /* =========================
@@ -205,7 +308,7 @@ async function sendMessage() {
         removeLoadingMessage();
 
         addMessage(
-            "⚠️ no molestar en este momento, estoy meditando algunas respuestas.",
+            "⚠️ No me molestes en este momento, estoy meditando algunas respuestas.",
             "bot"
         );
     }
@@ -230,6 +333,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+        loadMessages();
 });
 
 /* =========================
@@ -238,3 +342,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
 window.sendMessage = sendMessage;
 window.addMessage = addMessage;
+window.clearHistory = clearHistory;
+window.loadMessages = loadMessages; 

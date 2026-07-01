@@ -42,7 +42,6 @@ function selectCharacter(character) {
   const name = document.getElementById("characterName");
   const description = document.getElementById("characterDescription");
 
-  // actualizar UI del personaje activo
   if (avatar) {
     avatar.src = characterData[character].avatar;
     avatar.alt = characterData[character].name;
@@ -55,20 +54,19 @@ function selectCharacter(character) {
   if (description) {
     description.textContent = characterData[character].description;
   }
+  if (window.loadMessages) {
+  window.loadMessages();
+}
 
-  // ir a chat
+  // Ir automáticamente al chat
   showView("chat");
-
-  // 🔥 IMPORTANTE: opcional (limpiar chat al cambiar personaje)
-  // messages = [];
-  // renderMessages();
 }
 
 /* =========================
-   SPA NAVIGATION
+   SPA + HISTORY API
 ========================= */
 
-function showView(viewId) {
+function showView(viewId, pushState = true) {
 
   const views = document.querySelectorAll(".view");
 
@@ -81,14 +79,61 @@ function showView(viewId) {
   if (target) {
     target.classList.add("active");
   }
+
+  // Actualizar URL sin recargar
+  if (pushState) {
+
+    const newUrl = `/${viewId}`;
+
+    if (window.location.pathname !== newUrl) {
+
+      history.pushState(
+        { view: viewId },
+        "",
+        newUrl
+      );
+
+    }
+  }
 }
+
+/* =========================
+   BOTONES ATRÁS/ADELANTE
+========================= */
+
+window.addEventListener("popstate", event => {
+
+  const view = event.state?.view ||
+    window.location.pathname.replace("/", "") ||
+    "home";
+
+  showView(view, false);
+
+});
 
 /* =========================
    INICIALIZACIÓN
 ========================= */
 
 document.addEventListener("DOMContentLoaded", () => {
-  showView("home");
+
+  let currentRoute =
+    window.location.pathname.replace("/", "");
+
+  const validRoutes = ["home", "chat", "about"];
+
+  if (!validRoutes.includes(currentRoute)) {
+    currentRoute = "home";
+  }
+
+  history.replaceState(
+    { view: currentRoute },
+    "",
+    `/${currentRoute}`
+  );
+
+  showView(currentRoute, false);
+
 });
 
 /* =========================

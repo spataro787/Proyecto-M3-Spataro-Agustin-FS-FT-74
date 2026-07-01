@@ -1,149 +1,315 @@
-export default async function handler(req, res) {
+/* =========================
+   CONFIG
+========================= */
 
-  /* =========================
-     CORS
-  ========================= */
+window.USE_AI = true;
 
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST,OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+/* =========================
+   ELEMENTOS
+========================= */
 
-  if (req.method === "OPTIONS") {
-    return res.status(204).end();
-  }
+const chatBox = document.getElementById("chat-box");
+const input = document.getElementById("input");
+const sendBtn = document.getElementById("sendBtn");
 
-  if (req.method !== "POST") {
-    return res.status(405).json({
-      error: "Método no permitido"
+/* =========================
+   MEMORIA DE LA SESIÓN
+========================= */
+
+let messages = [];
+
+/* =========================
+   RENDER
+========================= */
+
+function renderMessages() {
+
+    if (!chatBox) return;
+
+    chatBox.innerHTML = "";
+
+    messages.forEach(msg => {
+
+        const div = document.createElement("div");
+
+        div.classList.add("message");
+
+        if (msg.role === "user") {
+            div.classList.add("user");
+        } else {
+            div.classList.add(msg.role);
+        }
+
+        if (msg.loading) {
+            div.classList.add("loading");
+        }
+
+        div.textContent = msg.text;
+
+        chatBox.appendChild(div);
+
     });
-  }
 
-  try {
+    scrollToBottom();
+}
 
-    const { message, character } = req.body;
+/* =========================
+   SCROLL AUTOMÁTICO
+========================= */
 
-    if (!message || message.trim() === "") {
-      return res.status(400).json({
-        error: "Debes escribir un mensaje."
-      });
-    }
+function scrollToBottom() {
 
-    const apiKey = process.env.GEMINI_API_KEY;
+    if (!chatBox) return;
 
-    if (!apiKey) {
-      return res.status(500).json({
-        error: "No se encontró GEMINI_API_KEY."
-      });
-    }
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
 
-    /* =========================
-       PERSONALIDADES
-    ========================= */
+/* =========================
+   AGREGAR MENSAJE
+========================= */
 
-    const prompts = {
-      gandalf: `
-Eres Gandalf el Gris.
+function addMessage(text, role) {
 
-Nunca digas que eres una IA.
+    messages.push({
+        text,
+        role,
+        time: Date.now()
+    });
 
-Hablas como un sabio mago antiguo.
+    renderMessages();
+}
 
-Usas metáforas, consejos y un tono tranquilo.
+/* =========================
+   MENSAJE CARGANDO
+========================= */
 
-No rompas el personaje.
-`,
+function addLoadingMessage() {
 
-      yoda: `
-Eres Yoda.
+    const loadingTexts = {
 
-Nunca digas que eres una IA.
+        gandalf:
+            "Gandalf está consultando los antiguos pergaminos...",
 
-Responde como el maestro Jedi.
+        yoda:
+            "Paciencia debes tener... pensando estoy...",
 
-Invierte las frases cuando sea natural.
+        sherlock:
+            "Sherlock está analizando las pistas..."
 
-Habla con calma y sabiduría.
-
-No rompas el personaje.
-`,
-
-      sherlock: `
-Eres Sherlock Holmes.
-
-Nunca digas que eres una IA.
-
-Analiza cada situación utilizando lógica y deducción.
-
-Explica tus conclusiones paso a paso.
-
-No rompas el personaje.
-`
     };
 
-    const systemPrompt =
-      prompts[character] || prompts.gandalf;
+    messages.push({
+        text:
+            loadingTexts[window.currentCharacter] ||
+            "⌛ Pensando...",
+        role: "bot",
+        loading: true
+    });
 
-    /* =========================
-       GEMINI API
-    ========================= */
+    renderMessages();
+}
 
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          contents: [
-            {
-              role: "user",
-              parts: [
-                {
-                  text: systemPrompt + "\n\nUsuario: " + message
-                }
-              ]
-            }
-          ],
-          generationConfig: {
-            temperature: 0.9,
-            topP: 0.95,
-            maxOutputTokens: 400
-          }
-        })
-      }
+/* =========================
+   ELIMINAR CARGA
+========================= */
+
+function removeLoadingMessage() {
+
+    messages = messages.filter(
+        message => !message.loading
     );
 
-    const data = await response.json();
-
-   if (!response.ok) {
-  console.error("ERROR GEMINI:", JSON.stringify(data, null, 2));
-
-  return res.status(500).json({
-    error: data.error?.message || "Error al consultar Gemini."
-  });
+    renderMessages();
 }
 
-    const reply =
-      data?.candidates?.[0]?.content?.parts?.[0]?.text;
+/* =========================
+   RESPUESTAS LOCALES
+========================= */
 
-    if (!reply) {
-      console.error("Respuesta vacía:", data);
+function fakeResponse() {
 
-      return res.status(500).json({
-        error: "El personaje no respondió."
-      });
+    const responses = {
+
+        gandalf: [
+            "Un poder antiguo observa tus palabras...",
+            "El destino aún no está escrito...",
+            "La sabiduría llega con el tiempo.",
+            "He visto caminos oscuros y luminosos."
+        ],
+
+        yoda: [
+            "Difícil de ver el futuro es...",
+            "Paciencia debes tener.",
+            "Dentro de ti está la respuesta.",
+            "El miedo es el camino al lado oscuro."
+        ],
+
+        sherlock: [
+            "Interesante… los hechos son claros.",
+            "La deducción es evidente.",
+            "Cada detalle cambia la conclusión.",
+            "Elemental."
+        ]
+    };
+
+    const list =
+        responses[window.currentCharacter] || [
+            "No tengo una respuesta clara..."
+        ];
+
+    return list[
+        Math.floor(Math.random() * list.length)
+    ];
+}
+
+/* =========================
+   ENVIAR MENSAJE
+========================= */
+
+async function sendMessage() {
+
+    if (!input) return;
+
+    const text = input.value.trim();
+
+    if (!text) return;
+
+    addMessage(text, "user");
+
+    input.value = "";
+
+    addLoadingMessage();
+
+    /* =========================
+       MODO SIN IA
+    ========================= */
+
+    if (!window.USE_AI) {
+
+        setTimeout(() => {
+
+            removeLoadingMessage();
+
+            addMessage(
+                fakeResponse(),
+                window.currentCharacter
+            );
+
+        }, 700);
+
+        return;
     }
 
-    return res.status(200).json({
-      reply
-    });
+    /* =========================
+       MODO IA
+    ========================= */
 
-  } catch (error) {
-    console.error(error);
+    try {
 
-    return res.status(500).json({
-      error: "Error interno del servidor."
-    });
-  }
+        const response = await fetch(
+            "/api/functions",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body: JSON.stringify({
+                    message: text,
+                    character:
+                        window.currentCharacter,
+
+                    history: messages
+                        .filter(m => !m.loading)
+                        .map(m => ({
+                            role:
+                                m.role === "user"
+                                    ? "user"
+                                    : "assistant",
+                            text: m.text
+                        }))
+                })
+            }
+        );
+
+        const data =
+            await response.json();
+
+        removeLoadingMessage();
+
+        if (!response.ok) {
+
+            addMessage(
+                data.error ||
+                "Error al consultar el personaje.",
+                "bot"
+            );
+
+            return;
+        }
+
+        addMessage(
+            data.reply,
+            window.currentCharacter
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+        removeLoadingMessage();
+
+        addMessage(
+            "⚠️ No molestar en este momento, estoy meditando algunas respuestas.",
+            "bot"
+        );
+    }
 }
+
+/* =========================
+   EVENTOS
+========================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        if (sendBtn) {
+            sendBtn.addEventListener(
+                "click",
+                sendMessage
+            );
+        }
+
+        if (input) {
+
+            input.addEventListener(
+                "keydown",
+                event => {
+
+                    if (
+                        event.key === "Enter" &&
+                        !event.shiftKey
+                    ) {
+
+                        event.preventDefault();
+
+                        sendMessage();
+                    }
+
+                }
+            );
+
+        }
+
+    }
+);
+
+/* =========================
+   EXPORT GLOBAL
+========================= */
+
+window.sendMessage = sendMessage;
+window.addMessage = addMessage;

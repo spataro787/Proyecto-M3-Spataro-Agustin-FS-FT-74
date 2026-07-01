@@ -23,7 +23,7 @@
   <header class="navbar">
 
     <div class="logo">
-      ✨ Fantasy AI Chat
+       Fantasy AI Chat
     </div>
 
     <nav>
@@ -135,26 +135,43 @@
 
     <div class="chat-box">
 
-      <div class="character-info">
+     <div class="character-info">
 
-        <img
-          id="characterAvatar"
-          src="/images/gandalf.png"
-          alt="Avatar">
+  <img
+    id="characterAvatar"
+    src="/images/gandalf.png"
+    alt="Avatar">
 
-        <div>
+  <div>
 
-          <h2 id="characterName">
-            🧙 Gandalf
-          </h2>
+    <h2 id="characterName">
+      🧙 Gandalf
+    </h2>
 
-          <p id="characterDescription">
-            El sabio mago de la Tierra Media.
-          </p>
+    <p id="characterDescription">
+      El sabio mago de la Tierra Media.
+    </p>
 
-        </div>
+  </div>
 
-      </div>
+  <!-- NUEVO BLOQUE -->
+  <div class="history-panel">
+
+    <span id="historyStatus">
+      Sin historial guardado
+    </span>
+
+    <button
+      id="clearHistoryBtn"
+      onclick="clearHistory()">
+
+      🗑️ Borrar historial
+
+    </button>
+
+  </div>
+
+</div>
 
       <div
         id="chat-box"
