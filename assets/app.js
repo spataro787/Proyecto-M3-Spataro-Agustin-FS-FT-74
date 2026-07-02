@@ -1,8 +1,6 @@
 /* =========================
    PERSONAJE ACTUAL
-========================= */
-
-window.currentCharacter = "gandalf";
+========================= *
 
 /* =========================
    DATOS PERSONAJES
