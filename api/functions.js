@@ -20,14 +20,13 @@ export default async function handler(req, res) {
 
   try {
 
-    const { message, character } = req.body;
+  const { history, character } = req.body;
 
-    if (!message || message.trim() === "") {
-      return res.status(400).json({
-        error: "Debes escribir un mensaje."
-      });
-    }
-
+if (!history || !Array.isArray(history) || history.length === 0) {
+  return res.status(400).json({
+    error: "No hay historial de conversación."
+  });
+}
     const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
@@ -80,9 +79,24 @@ No rompas el personaje.
 `
     };
 
-    const systemPrompt =
-      prompts[character] || prompts.gandalf;
-
+   const contents = [
+  {
+    role: "user",
+    parts: [
+      {
+        text: systemPrompt
+      }
+    ]
+  },
+  ...history.map(msg => ({
+    role: msg.role,
+    parts: [
+      {
+        text: msg.text
+      }
+    ]
+  }))
+];
     /* =========================
        GEMINI API
     ========================= */
@@ -94,17 +108,8 @@ No rompas el personaje.
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-          contents: [
-            {
-              role: "user",
-              parts: [
-                {
-                  text: systemPrompt + "\n\nUsuario: " + message
-                }
-              ]
-            }
-          ],
+       body: JSON.stringify({
+  contents,
           generationConfig: {
             temperature: 0.9,
             topP: 0.95,

@@ -16,6 +16,7 @@ const sendBtn = document.getElementById("sendBtn");
    MEMORIA
 ========================= */
 
+let conversationHistory = [];
 let messages = [];
 /* =========================
    LOCAL STORAGE
@@ -53,9 +54,16 @@ function loadMessages() {
 
         messages = JSON.parse(saved);
 
-        renderMessages();
-        updateHistoryIndicator();
+// Reconstruye el historial para enviarlo a la IA
+conversationHistory = messages
+    .filter(msg => !msg.loading)
+    .map(msg => ({
+        role: msg.role === "user" ? "user" : "model",
+        text: msg.text
+    }));
 
+renderMessages();
+updateHistoryIndicator();
     }catch (error) {
 
     console.error(
@@ -64,6 +72,7 @@ function loadMessages() {
     );
 
     messages = [];
+  
 
     renderMessages();
 
@@ -81,6 +90,7 @@ function clearHistory() {
     }
 
     messages = [];
+    conversationHistory = [];
 
     localStorage.removeItem(
         getStorageKey()
@@ -250,6 +260,11 @@ async function sendMessage() {
     // usuario
     addMessage(message, "user");
 
+conversationHistory.push({
+    role: "user",
+    text: message
+});
+
     input.value = "";
 
     // loader
@@ -281,10 +296,10 @@ async function sendMessage() {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                message,
-                character: window.currentCharacter,
-                useAI: window.USE_AI
-            })
+    history: conversationHistory,
+    character: window.currentCharacter,
+    useAI: window.USE_AI
+})
         });
 
         const data = await response.json();
@@ -300,6 +315,11 @@ async function sendMessage() {
         }
 
         addMessage(data.reply, window.currentCharacter);
+
+conversationHistory.push({
+    role: "model",
+    text: data.reply
+});
 } catch (error) {
 
     console.error(error);
