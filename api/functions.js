@@ -20,13 +20,14 @@ export default async function handler(req, res) {
 
   try {
 
-  const { history, character } = req.body;
+    const { history, character } = req.body;
 
-if (!history || !Array.isArray(history) || history.length === 0) {
-  return res.status(400).json({
-    error: "No hay historial de conversación."
-  });
-}
+    if (!history || !Array.isArray(history) || history.length === 0) {
+      return res.status(400).json({
+        error: "La conversación está vacía."
+      });
+    }
+
     const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
@@ -40,6 +41,7 @@ if (!history || !Array.isArray(history) || history.length === 0) {
     ========================= */
 
     const prompts = {
+
       gandalf: `
 Eres Gandalf el Gris.
 
@@ -47,7 +49,9 @@ Nunca digas que eres una IA.
 
 Hablas como un sabio mago antiguo.
 
-Usas metáforas, consejos y un tono tranquilo.
+Responde siempre en español.
+
+Usa metáforas, consejos y un tono tranquilo.
 
 No rompas el personaje.
 `,
@@ -57,9 +61,9 @@ Eres Yoda.
 
 Nunca digas que eres una IA.
 
-Responde como el maestro Jedi.
+Responde siempre en español.
 
-Invierte las frases cuando sea natural.
+Invierte algunas frases cuando sea natural.
 
 Habla con calma y sabiduría.
 
@@ -71,34 +75,48 @@ Eres Sherlock Holmes.
 
 Nunca digas que eres una IA.
 
-Analiza cada situación utilizando lógica y deducción.
+Responde siempre en español.
 
-Explica tus conclusiones paso a paso.
+Analiza cada situación mediante lógica y deducción.
 
 No rompas el personaje.
 `
+
     };
 
-   const contents = [
-  {
-    role: "user",
-    parts: [
-      {
-        text: systemPrompt
-      }
-    ]
-  },
-  ...history.map(msg => ({
-    role: msg.role,
-    parts: [
-      {
-        text: msg.text
-      }
-    ]
-  }))
-];
+    const systemPrompt =
+      prompts[character] || prompts.gandalf;
+
     /* =========================
-       GEMINI API
+       ARMAR HISTORIAL
+    ========================= */
+
+    const conversation = [
+      {
+        role: "user",
+        parts: [
+          {
+            text: systemPrompt
+          }
+        ]
+      }
+    ];
+
+    history.forEach(msg => {
+
+      conversation.push({
+        role: msg.role === "model" ? "model" : "user",
+        parts: [
+          {
+            text: msg.text
+          }
+        ]
+      });
+
+    });
+
+    /* =========================
+       GEMINI
     ========================= */
 
     const response = await fetch(
@@ -108,47 +126,61 @@ No rompas el personaje.
         headers: {
           "Content-Type": "application/json"
         },
-       body: JSON.stringify({
-  contents,
+        body: JSON.stringify({
+
+          contents: conversation,
+
           generationConfig: {
             temperature: 0.9,
             topP: 0.95,
             maxOutputTokens: 400
           }
+
         })
       }
     );
 
     const data = await response.json();
 
-   if (!response.ok) {
-  console.error("ERROR GEMINI:", JSON.stringify(data, null, 2));
+    console.log(JSON.stringify(data, null, 2));
 
-  return res.status(500).json({
-    error: data.error?.message || "Error al consultar Gemini."
-  });
-}
+    if (!response.ok) {
+
+      console.error(data);
+
+      return res.status(500).json({
+        error:
+          data.error?.message ||
+          "Error al consultar Gemini."
+      });
+
+    }
 
     const reply =
       data?.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (!reply) {
-      console.error("Respuesta vacía:", data);
 
       return res.status(500).json({
         error: "El personaje no respondió."
       });
+
     }
 
     return res.status(200).json({
       reply
     });
 
-  } catch (error) {
+  }
+
+  catch (error) {
+
     console.error(error);
 
     return res.status(500).json({
       error: "Error interno del servidor."
     });
+
   }
+
 }
