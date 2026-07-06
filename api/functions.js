@@ -1,3 +1,5 @@
+import { GoogleGenAI } from "@google/genai";
+
 export default async function handler(req, res) {
 
   /* =========================
@@ -18,23 +20,37 @@ export default async function handler(req, res) {
     });
   }
 
+
   try {
 
     const { history, character } = req.body;
 
-    if (!history || !Array.isArray(history) || history.length === 0) {
+
+    if (!history || !Array.isArray(history)) {
       return res.status(400).json({
-        error: "La conversación está vacía."
+        error: "No existe historial de conversación."
       });
     }
 
+
     const apiKey = process.env.GEMINI_API_KEY;
+
 
     if (!apiKey) {
       return res.status(500).json({
         error: "No se encontró GEMINI_API_KEY."
       });
     }
+
+
+    /* =========================
+       CLIENTE GEMINI SDK
+    ========================= */
+
+    const ai = new GoogleGenAI({
+      apiKey
+    });
+
 
     /* =========================
        PERSONALIDADES
@@ -49,9 +65,9 @@ Nunca digas que eres una IA.
 
 Hablas como un sabio mago antiguo.
 
-Responde siempre en español.
+Usas metáforas, consejos y un tono tranquilo.
 
-Usa metáforas, consejos y un tono tranquilo.
+Responde siempre en español.
 
 No rompas el personaje.
 `,
@@ -61,11 +77,11 @@ Eres Yoda.
 
 Nunca digas que eres una IA.
 
+Hablas como el maestro Jedi.
+
+Inviertes frases cuando sea natural.
+
 Responde siempre en español.
-
-Invierte algunas frases cuando sea natural.
-
-Habla con calma y sabiduría.
 
 No rompas el personaje.
 `,
@@ -75,89 +91,70 @@ Eres Sherlock Holmes.
 
 Nunca digas que eres una IA.
 
-Responde siempre en español.
+Analizas todo mediante lógica y deducción.
 
-Analiza cada situación mediante lógica y deducción.
+Explicas tus conclusiones.
+
+Responde siempre en español.
 
 No rompas el personaje.
 `
 
     };
 
+
     const systemPrompt =
       prompts[character] || prompts.gandalf;
 
+
+
     /* =========================
-       ARMAR HISTORIAL
+       HISTORIAL GEMINI
     ========================= */
 
-    const conversation = [
-      {
-        role: "user",
-        parts: [
-          {
-            text: systemPrompt
-          }
-        ]
+    const contents = history.map(msg => ({
+      role: msg.role,
+      parts: [
+        {
+          text: msg.text
+        }
+      ]
+    }));
+
+
+    contents.unshift({
+      role: "user",
+      parts: [
+        {
+          text: systemPrompt
+        }
+      ]
+    });
+
+
+
+    /* =========================
+       GEMINI SDK
+    ========================= */
+
+    const response = await ai.models.generateContent({
+
+      model: "gemini-2.5-flash",
+
+      contents,
+
+      config: {
+        temperature: 0.9,
+        topP: 0.95,
+        maxOutputTokens: 400
       }
-    ];
-
-    history.forEach(msg => {
-
-      conversation.push({
-        role: msg.role === "model" ? "model" : "user",
-        parts: [
-          {
-            text: msg.text
-          }
-        ]
-      });
 
     });
 
-    /* =========================
-       GEMINI
-    ========================= */
 
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
 
-          contents: conversation,
+    const reply = response.text;
 
-          generationConfig: {
-            temperature: 0.9,
-            topP: 0.95,
-            maxOutputTokens: 400
-          }
-
-        })
-      }
-    );
-
-    const data = await response.json();
-
-    console.log(JSON.stringify(data, null, 2));
-
-    if (!response.ok) {
-
-      console.error(data);
-
-      return res.status(500).json({
-        error:
-          data.error?.message ||
-          "Error al consultar Gemini."
-      });
-
-    }
-
-    const reply =
-      data?.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (!reply) {
 
@@ -167,18 +164,24 @@ No rompas el personaje.
 
     }
 
+
     return res.status(200).json({
       reply
     });
 
-  }
 
-  catch (error) {
+  } catch (error) {
 
-    console.error(error);
+    console.error(
+      "ERROR GEMINI SDK:",
+      error
+    );
+
 
     return res.status(500).json({
-      error: "Error interno del servidor."
+      error:
+        error.message ||
+        "Error interno del servidor."
     });
 
   }
