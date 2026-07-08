@@ -10,21 +10,18 @@ El proyecto fue desarrollado con **HTML, CSS y JavaScript puro**, implementando 
 
 🔗 https://proyecto-m3-spataro-agustin-fs-ft-7.vercel.app/
 
-
-# 📸 Capturas de la aplicación
-
-## 🏠 Página principal
-
-
----
-
 ## 🧙 Selección de personajes
 
+![alt text](<images/Captura de pantalla 2026-07-08 182247.png>)
 
 ## 💬 Vista del chat
 
+![alt text](<images/Captura de pantalla 2026-07-08 182511.png>)
 
----
+# 📸 Capturas de la aplicación
+
+![alt text](<images/Captura de pantalla 2026-07-08 182222.png>)
+
 
 ## ✨ Características principales
 
