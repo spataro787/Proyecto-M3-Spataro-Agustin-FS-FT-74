@@ -10,6 +10,20 @@ El proyecto fue desarrollado con **HTML, CSS y JavaScript puro**, implementando 
 
 🔗 https://proyecto-m3-spataro-agustin-fs-ft-7.vercel.app/
 
+
+# 📸 Capturas de la aplicación
+
+## 🏠 Página principal
+
+
+---
+
+## 🧙 Selección de personajes
+
+
+## 💬 Vista del chat
+
+
 ---
 
 ## ✨ Características principales
@@ -116,7 +130,40 @@ Respuesta del personaje
    ↓
 Frontend
 ```
+# 🚀 Arquitectura y características implementadas
 
+Durante el desarrollo de la aplicación se implementaron distintas funcionalidades orientadas a ofrecer una experiencia de usuario fluida, una arquitectura organizada y una integración segura con servicios externos.
+
+### Frontend
+
+- Single Page Application (SPA) desarrollada con JavaScript Vanilla.
+- Navegación dinámica mediante History API sin recargar la página.
+- Renderizado dinámico de vistas.
+- Interfaz responsive siguiendo la metodología Mobile First.
+- Componentes reutilizables para la interfaz del chat.
+- Diferenciación visual entre mensajes del usuario y de la IA.
+- Indicadores de carga mientras se generan respuestas.
+
+### Backend
+
+- Implementación de una Serverless Function en Vercel.
+- Protección de la API Key mediante variables de entorno.
+- Validación de solicitudes antes de consultar la API.
+- Manejo de errores y respuestas del servidor.
+
+### Inteligencia Artificial
+
+- Integración con Google Gemini AI.
+- Prompts personalizados para cada personaje.
+- Personalidades independientes mediante System Prompt.
+- Respuestas dinámicas generadas en tiempo real.
+
+### Persistencia de datos
+
+- Almacenamiento del historial utilizando Local Storage.
+- Historial independiente para cada personaje.
+- Recuperación automática de conversaciones.
+- Eliminación individual del historial cuando el usuario lo desea.
 ---
 
 # 💬 Uso de la aplicación
@@ -280,6 +327,42 @@ Verificar:
 * Configuración de variables de entorno.
 
 ---
+# 📚 Aprendizajes obtenidos
+
+Este proyecto permitió aplicar y fortalecer conocimientos relacionados con el desarrollo web moderno y la integración de servicios de inteligencia artificial.
+
+Entre los principales aprendizajes se destacan:
+
+- Desarrollo de aplicaciones Single Page Application (SPA).
+- Organización modular del código utilizando JavaScript Vanilla.
+- Consumo de APIs mediante Fetch API.
+- Integración de Google Gemini AI.
+- Implementación de funciones Serverless con Vercel.
+- Gestión segura de variables de entorno.
+- Persistencia de datos mediante Local Storage.
+- Diseño Responsive utilizando una estrategia Mobile First.
+- Manejo de estados de carga y tratamiento de errores.
+- Control de versiones utilizando Git y GitHub.
+
+# ⭐ Mejoras futuras
+
+Algunas funcionalidades que podrían incorporarse en futuras versiones son:
+
+- Agregar nuevos personajes con personalidades personalizadas.
+- Incorporar streaming de respuestas en tiempo real.
+- Permitir adjuntar imágenes en la conversación.
+- Implementar autenticación de usuarios.
+- Sincronizar el historial mediante una base de datos.
+- Incorporar temas visuales (claro, oscuro y medieval).
+- Agregar animaciones y efectos visuales para mejorar la experiencia de usuario.
+
+# 🏆 Sobre el proyecto
+
+Este proyecto fue desarrollado como parte de una práctica académica orientada a consolidar conocimientos de desarrollo Full Stack utilizando tecnologías web modernas.
+
+El principal objetivo fue construir una aplicación completa que integrara un frontend desarrollado con HTML, CSS y JavaScript Vanilla junto con un backend Serverless desplegado en Vercel, consumiendo la API de Google Gemini para generar conversaciones dinámicas con distintos personajes de ficción.
+
+Además de cumplir con los requisitos funcionales, se priorizó la organización del código, la experiencia de usuario, el diseño responsive y la seguridad de las credenciales mediante variables de entorno.
 
 # 👨‍💻 Autor
 
